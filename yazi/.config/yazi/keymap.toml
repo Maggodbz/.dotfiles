@@ -1,2 +1,31 @@
-[keys.normal]
-enter = "edit"
+[[manager.prepend_keymap]]
+on = ["<C-f>"]
+run = '''
+shell --block '
+selected=$(fd . ~ 2>/dev/null | fzf \
+  --layout=reverse \
+  --height=60% \
+  --info=inline \
+  --border \
+  --prompt="📁 Jump to: " \
+  --preview-window=right:60%:wrap \
+  --preview="[[ -d {} ]] && ls -A --color=always {} || bat --style=plain --color=always {} 2>/dev/null || cat {}" \
+  --bind="ctrl-j:down,ctrl-k:up,ctrl-h:toggle-preview,ctrl-l:toggle-preview-wrap" \
+  --bind="esc:abort,q:abort")
+
+# Only proceed if something was selected
+if [ -n "$selected" ]; then
+  if [ -d "$selected" ]; then
+    # For directories, use the ya command to change directory
+    ya emit cd "$selected"
+  else
+    # For files, change to parent directory and reveal the file
+    dir=$(dirname "$selected")
+    file=$(basename "$selected")
+    ya emit cd "$dir"
+    ya emit reveal "$file"
+  fi
+fi
+'
+'''
+desc = "Jump to directory or file using fzf"

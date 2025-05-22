@@ -1,0 +1,60 @@
+{
+  "layer": "top",
+  "position": "top",
+
+  "modules-left": ["hyprland/workspaces"],
+  "modules-center": ["custom/hyper-mode"],
+  "modules-right": ["tray", "clock", "pulseaudio", "network", "backlight", "battery"],
+  
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "all-outputs": true,
+    "active-only": false,
+    "sort-by-number": true,
+    "on-click": "activate",
+    "tooltip": false
+  },
+
+  "custom/hyper-mode": {
+    "exec": "~/.config/waybar/modules/hyper-mode-status.sh",
+    "return-type": "json",
+    "format": "{}",
+    "on-click": "echo 'hyper' > ~/.config/hypr/mode && hyprctl dispatch submap hyper",
+    "interval": 1,
+    "tooltip": true
+  },
+
+  "backlight": {
+    "format": "\uf185 {percent}%",
+    "tooltip": false,
+    "on-scroll-up": "brightnessctl set +1%",
+    "on-scroll-down": "brightnessctl set 1%-"
+  },
+
+  "network": {
+    "format-wifi": "\uf012 {essid}",
+    "format-ethernet": "🔌 {ifname}",
+    "format-disconnected": "🚫",
+    "tooltip": false
+  },
+
+  "battery": {
+    "format": "\uf240 {capacity}% ",
+    "format-charging": "⚡ {capacity}%",
+    "format-icons": {
+      "80": "",
+      "60": "",
+      "40": "",
+      "20": "",
+      "0": ""
+    }
+  },
+
+  "pulseaudio": {
+    "format": "\uf028 {volume}%",
+    "format-muted": "🔇",
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +1%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -1%",
+    "tooltip": false
+  }
+}

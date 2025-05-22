@@ -1,0 +1,110 @@
+/* === General Waybar Styling === */
+#waybar {
+  background: rgba(40, 42, 54, 0.3); /* Dracula-ish translucent */
+  color: #ffffff;                   /* Monochrome icons */
+  border: none;
+  border-radius: 12px;
+  margin: 6px 6px 0 6px;
+  font-family: "JetBrainsMono Nerd Font Mono";
+  font-size: 13px;
+  padding: 6px 12px;
+}
+
+/* === Universal Module Styling Override === */
+#waybar > * {
+  color: #ffffff;
+  background: transparent;
+  border: none;
+}
+
+/* === Workspaces Styling === */
+#workspaces button {
+  padding: 0 8px;
+  margin: 0 2px;
+  color: #bbbbbb;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+#workspaces button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#workspaces button.active {
+  color: #ffffff;
+  background: rgba(189, 147, 249, 0.4);
+  box-shadow: inset 0 -3px 0 #bd93f9;
+  font-weight: bold;
+}
+
+#workspaces button.urgent {
+  background: rgba(255, 85, 85, 0.4);
+  color: #ffffff;
+}
+
+/* === Specific Modules === */
+#tray,
+#clock,
+#pulseaudio,
+#network,
+#bluetooth,
+#battery,
+#backlight {
+  margin-left: 12px;
+  color: #ffffff;
+  background: transparent;
+}
+
+/* Clock */
+#clock {
+  font-weight: 600;
+  color: #f8f8f2;
+}
+
+/* Battery States */
+#battery.good {
+  color: #a6e3a1;
+}
+#battery.warning {
+  color: #fab387;
+}
+#battery.critical {
+  color: #f38ba8;
+}
+
+/* Audio States */
+#pulseaudio {
+  color: #ffffff;
+  background: transparent;
+}
+#pulseaudio.muted {
+  color: #6c7086;
+  background: transparent;
+}
+
+/* Tray Icons */
+#tray > .passive {
+  opacity: 0.6;
+}
+#tray > .needs-attention {
+  color: #f38ba8;
+}
+
+/* Add styling for hyper mode indicator */
+#custom-hyper-mode {
+  padding: 0 10px;
+  margin: 0 5px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#custom-hyper-mode.hyper {
+  color: #ff5555;
+  background-color: rgba(255, 85, 85, 0.2);
+  border-bottom: 3px solid #ff5555;
+}
+
+#custom-hyper-mode.normal {
+  color: #8be9fd;
+}

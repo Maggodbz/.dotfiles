@@ -7,42 +7,41 @@ return {
   use_fancy_tab_bar = false,
   hide_tab_bar_if_only_one_tab = true,
   color_scheme = 'Red Planet',
+  window_background_opacity = 0.8,
   -- front_end = "Software",
 
   keys = {
     -- 🔀 Split panes with Shift + Alt + Arrow
-    {key="h",  mods="ALT|SHIFT", action=wezterm.action.SplitHorizontal{domain="CurrentPaneDomain"}},
-    {key="l", mods="ALT|SHIFT", action=wezterm.action.SplitHorizontal{domain="CurrentPaneDomain"}},
-    {key="k",    mods="ALT|SHIFT", action=wezterm.action.SplitVertical{domain="CurrentPaneDomain"}},
-    {key="j",  mods="ALT|SHIFT", action=wezterm.action.SplitVertical{domain="CurrentPaneDomain"}},
-    -- 🔧 Resize panes (Shift + Arrows)
-    {key="h",  mods="SHIFT", action=wezterm.action.AdjustPaneSize{"Left", 3}},
-    {key="l", mods="SHIFT", action=wezterm.action.AdjustPaneSize{"Right", 3}},
-    {key="k",    mods="SHIFT", action=wezterm.action.AdjustPaneSize{"Up", 2}},
-    {key="j",  mods="SHIFT", action=wezterm.action.AdjustPaneSize{"Down", 2}},
+    {key="h",  mods="SUPER|SHIFT", action=wezterm.action.SplitHorizontal{domain="CurrentPaneDomain"}},
+    {key="l", mods="SUPER|SHIFT", action=wezterm.action.SplitHorizontal{domain="CurrentPaneDomain"}},
+    {key="k",    mods="SUPER|SHIFT", action=wezterm.action.SplitVertical{domain="CurrentPaneDomain"}},
+    {key="j",  mods="SUPER|SHIFT", action=wezterm.action.SplitVertical{domain="CurrentPaneDomain"}},
 
-    -- 🧭 Navigate with Alt + Arrows
-    {key="h",  mods="ALT", action=wezterm.action.ActivatePaneDirection("Left")},
-    {key="l", mods="ALT", action=wezterm.action.ActivatePaneDirection("Right")},
-    {key="k",    mods="ALT", action=wezterm.action.ActivatePaneDirection("Up")},
-    {key="j",  mods="ALT", action=wezterm.action.ActivatePaneDirection("Down")},
+    -- 🧭 Navigate with Super + Arrows
+    {key="h",  mods="SUPER", action=wezterm.action.ActivatePaneDirection("Left")},
+    {key="l", mods="SUPER", action=wezterm.action.ActivatePaneDirection("Right")},
+    {key="k",    mods="SUPER", action=wezterm.action.ActivatePaneDirection("Up")},
+    {key="j",  mods="SUPER", action=wezterm.action.ActivatePaneDirection("Down")},
+
+    -- ❌ Close pane with Super + C
+    {key="c", mods="SUPER", action=wezterm.action.CloseCurrentPane{confirm=true}},
 
     -- 🔍 Search with Alt + F
-    {key="f", mods="ALT", action=wezterm.action.Search{CaseInSensitiveString=""}},
+    {key="f", mods="SUPER", action=wezterm.action.Search{CaseInSensitiveString=""}},
 
     -- ➕ New tab with Alt + T
-    {key="t", mods="ALT", action=wezterm.action.SpawnTab("CurrentPaneDomain")},
+    {key="t", mods="SUPER", action=wezterm.action.SpawnTab("CurrentPaneDomain")},
 
     -- ❌ Close tab with Alt + C
-    {key="c", mods="ALT", action=wezterm.action.CloseCurrentTab{confirm=true}},
+    {key="x", mods="SUPER", action=wezterm.action.CloseCurrentTab{confirm=true}},
 
      -- 🧭 Move between tabs
-    {key="n", mods="ALT", action=wezterm.action.ActivateTabRelative(1)},   -- Alt+n → next tab
-    {key="p", mods="ALT", action=wezterm.action.ActivateTabRelative(-1)},  -- Alt+p → previous tab
+    {key="n", mods="SUPER", action=wezterm.action.ActivateTabRelative(1)},   -- Alt+n → next tab
+    {key="p", mods="SUPER", action=wezterm.action.ActivateTabRelative(-1)},  -- Alt+p → previous tab
 
     -- 🔢 Go to tab 1-3 directly
-    {key="1", mods="ALT", action=wezterm.action.ActivateTab(0)},
-    {key="2", mods="ALT", action=wezterm.action.ActivateTab(1)},
-    {key="3", mods="ALT", action=wezterm.action.ActivateTab(2)},
+    {key="1", mods="SUPER", action=wezterm.action.ActivateTab(0)},
+    {key="2", mods="SUPER", action=wezterm.action.ActivateTab(1)},
+    {key="3", mods="SUPER", action=wezterm.action.ActivateTab(2)},
   },
 }
