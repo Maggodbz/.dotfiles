@@ -1,0 +1,8 @@
+;; VPN
+(defpoll VPN :interval "5s"
+  "./widgets/vpn/enliteai-vpn-status.sh")
+
+(defwidget vpn-box []
+  (box :spacing 2 :class "vpn-box" :tooltip {VPN.tooltip}
+    (image :path "./icons/${VPN.icon}.svg" :image-width 16 :image-height 16)
+    (label :class "vpn" :text {VPN.text}))) 

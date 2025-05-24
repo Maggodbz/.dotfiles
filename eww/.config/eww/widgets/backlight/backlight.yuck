@@ -1,0 +1,8 @@
+;; Backlight
+(defpoll BRT :interval "1s"
+  "bash -lc 'brightnessctl get | awk \"NR==1 {printf \\\"%d%%\\\", \\$1}\"'")
+
+(defwidget backlight []
+  (box :spacing 2
+    (image :icon "display-brightness" :icon-size "small-toolbar")
+    (label :class "backlight" :text "${BRT}"))) 

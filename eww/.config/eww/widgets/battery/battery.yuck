@@ -1,0 +1,9 @@
+;; Battery
+(defpoll BAT :interval "10s"
+  "bash -lc 'cat /sys/class/power_supply/BAT0/capacity \
+     | awk \"{printf \\\"%d%%\\\", \\$1}\"'")
+
+(defwidget battery []
+  (box :spacing 2
+    (image :icon "4digits" :icon-size "small-toolbar")
+    (label :class "battery" :text "${BAT}"))) 

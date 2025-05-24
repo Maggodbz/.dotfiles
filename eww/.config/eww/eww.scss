@@ -1,70 +1,23 @@
-/* ~/.config/eww/style.css */
-* {
-  all: unset;
-  font-family: "JetBrainsMono Nerd Font", monospace;
-}
+// ~/.config/eww/eww.scss
 
-.topbar {
-  background-color: rgba(40, 42, 54, 0.95);
-  color: #f8f8f2;
-  padding: 0px 6px;
-}
+// first your theme
 
-.topbar label {
-  font-size: 12px;
-  margin: 0 2px;
-}
+// then any globals / mixins you need
+// @import "globals";
 
-.workspaces {
-  font-weight: bold;
-  color: #8be9fd;
-}
+// windows
+@import "./theme/dark.scss";
 
-.hyper-button {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  padding: 0 6px;
-}
+// wait for the theme to be loaded
+@import "./windows/topbar.scss";
 
-.hyper {
-  color: #ff79c6;
-  font-weight: bold;
-}
+// // widgets
+// @import "./widgets/workspaces/workspaces.scss";
+// @import "./widgets/hyper/hyper.scss";
+// @import "./widgets/network/network.scss";
+// @import "./widgets/vpn/vpn.scss";
+// @import "./widgets/clock/clock.scss";
+// @import "./widgets/volume/volume.scss";
+// @import "./widgets/backlight/backlight.scss";
+// @import "./widgets/battery/battery.scss";
 
-.normal {
-  color: #8be9fd;
-}
-
-.network {
-  color: #8be9fd;
-}
-
-.vpn-box {
-  padding: 0 4px;
-}
-
-.vpn-box:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-.vpn {
-  margin: 0 2px;
-}
-
-.clock {
-  color: #f1fa8c;
-  font-weight: bold;
-}
-
-.volume {
-  color: #ff79c6;
-}
-
-.backlight {
-  color: #ffb86c;
-}
-
-.battery {
-  color: #50fa7b;
-}

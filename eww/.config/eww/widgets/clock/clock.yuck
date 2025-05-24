@@ -1,0 +1,8 @@
+;; Clock + tooltip
+(defpoll TIME :interval "1s"  "date +\"%H:%M\"")
+(defpoll TIME_TT :interval "1s" "date +\"%Y-%m-%d | Week %V | %H:%M:%S\"")
+
+(defwidget clock []
+  (box :spacing 2
+    (image :icon "preferences-system-time" :icon-size "small-toolbar")
+    (label :class "clock" :tooltip {TIME_TT} :text "${TIME}"))) 

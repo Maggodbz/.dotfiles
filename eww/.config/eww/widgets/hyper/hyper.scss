@@ -1,14 +1,14 @@
 .hyper-button {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: $bg-secondary;
   border-radius: 4px;
   padding: 0 6px;
 }
 
 .hyper {
-  color: #ff79c6;
+  color: $fg-primary;
   font-weight: bold;
 }
 
 .normal {
-  color: #8be9fd;
+  color: $accent-color;
 } 

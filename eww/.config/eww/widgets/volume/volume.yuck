@@ -1,0 +1,9 @@
+;; Volume
+(defpoll VOL :interval "1s"
+  "bash -lc 'pactl get-sink-volume @DEFAULT_SINK@ \
+     | awk \"NR==1 {print \\$5}\"'")
+
+(defwidget volume []
+  (box :spacing 2
+    (image :icon "audio-volume-high" :icon-size "small-toolbar")
+    (label :class "volume" :text "${VOL}"))) 

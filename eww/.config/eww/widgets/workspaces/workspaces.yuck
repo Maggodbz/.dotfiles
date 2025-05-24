@@ -6,9 +6,10 @@
   (box :class "workspace${workspace.active ? '-active' : ''}"
        :space-evenly false
        :spacing 4
+       :style "${workspace.active ? 'background-color: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 2px 4px;' : ''}"
     (label :text "${workspace.id}: " :halign "start")
     (for icon in {workspace.icons}
-      (image :path icon :image-width 16 :image-height 16))))
+      (image :path icon :image-width 24 :image-height 24))))
 
 (defwidget workspaces []
   (box :orientation "h" 

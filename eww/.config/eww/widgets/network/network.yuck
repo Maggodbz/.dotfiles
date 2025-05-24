@@ -1,0 +1,9 @@
+;; Network SSID (or "–" if none)
+(defpoll NET :interval "5s"
+  "bash -lc 'nmcli -t -f NAME,STATE connection show --active \
+     | grep activated | grep -v \"lo\\|docker\\|br-\\|tun\" | head -n1 | cut -d: -f1 || echo –'")
+
+(defwidget network []
+  (box :spacing 2
+    (image :icon "network-wireless" :icon-size "small-toolbar")
+    (label :class "network" :text "${NET}"))) 

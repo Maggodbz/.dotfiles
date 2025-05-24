@@ -1,100 +1,15 @@
-;; ~/.config/eww/topbar/eww.yuck
+;; Main eww configuration file
+;; This file imports all widgets and windows
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; VARIABLES – nothing here should error now
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Import all widget modules
+(include "widgets/workspaces/workspaces.yuck")
+(include "widgets/hyper/hyper.yuck")
+(include "widgets/vpn/vpn.yuck")
+(include "widgets/clock/clock.yuck")
+(include "widgets/volume/volume.yuck")
+(include "widgets/backlight/backlight.yuck")
+(include "widgets/battery/battery.yuck")
+(include "widgets/network/network.yuck")
 
-;; Workspaces: bracket the active one
-(defpoll WORKSPACES :interval "1s"
-  "bash -lc 'hyprctl workspaces -j \
-     | jq -r \"[.[] | select(.focused) | .id] as $cur \
-               | .[] | (if .id == $cur then \"[\" + (.id|tostring) + \"]\" else .id|tostring end)\" \
-     | paste -sd \" \" -'")
-
-;; Hyper‐mode (just passthrough your existing script)
-(defpoll HYPER :interval "1s"
-  "~/.config/eww/scripts/hyper-mode-status.sh")
-
-;; VPN status (🔒 or 🔓)
-(defpoll VPN :interval "5s"
-  "~/.config/eww/scripts/enliteai-vpn-status.sh")
-
-;; Clock + tooltip
-(defpoll TIME :interval "1s"  "date +\"%H:%M\"")
-(defpoll TIME_TT :interval "1s" "date +\"%Y-%m-%d | Week %V | %H:%M:%S\"")
-
-;; Volume
-(defpoll VOL :interval "1s"
-  "bash -lc 'pactl get-sink-volume @DEFAULT_SINK@ \
-     | awk \"NR==1 {print \\$5}\"'")
-
-;; Backlight
-(defpoll BRT :interval "1s"
-  "bash -lc 'brightnessctl get | awk \"NR==1 {printf \\\"%d%%\\\", \\$1}\"'")
-
-;; Battery
-(defpoll BAT :interval "10s"
-  "bash -lc 'cat /sys/class/power_supply/BAT0/capacity \
-     | awk \"{printf \\\"%d%%\\\", \\$1}\"'")
-
-;; Network SSID (or "–" if none)
-(defpoll NET :interval "5s"
-  "bash -lc 'nmcli -t -f NAME,STATE connection show --active \
-     | grep activated | grep -v \"lo\\|docker\\|br-\\|tun\" | head -n1 | cut -d: -f1 || echo –'")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; WIDGET: the bar itself
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defwidget topbar []
-  (box
-    :orientation "h"
-    :class       "topbar"
-    :hexpand     "true"
-    :spacing     1
-
-    ;; ─ left: workspaces
-    (box :orientation "h" :class "left" :spacing 2
-      (label :class "workspaces" :text WORKSPACES))
-
-    ;; ─ center: hyper
-    (box :orientation "h" :class "center" :spacing 2
-      (button
-        :class "hyper-button"
-        :onclick "bash -lc 'echo hyper > ~/.config/hypr/mode && hyprctl dispatch submap hyper'"
-        (label :class {HYPER.class} :text {HYPER.text})))
-
-    ;; ─ right: tray, network, vpn, clock, volume, backlight, battery
-    (box :orientation "h" :class "right" :spacing 2
-      (box :spacing 2
-        (image :icon "network-wireless" :icon-size 16)
-        (label :class "network" :text "${NET}"))
-      (button :onclick "~/.config/eww/scripts/enliteai-vpn-status.sh toggle"
-        (box :spacing 2 :class "vpn-box"
-          (image :path "~/.config/eww/icons/${VPN.icon}.svg" :image-width 16 :image-height 16)
-          (label :class "vpn" :text {VPN.text})))
-      (box :spacing 2
-        (image :icon "preferences-system-time" :icon-size 16)
-        (label :class "clock" :tooltip {TIME_TT} :text "${TIME}"))
-      (box :spacing 2
-        (image :icon "audio-volume-high" :icon-size 16)
-        (label :class "volume" :text "${VOL}"))
-      (box :spacing 2
-        (image :icon "display-brightness" :icon-size 16)
-        (label :class "backlight" :text "${BRT}"))
-      (box :spacing 2
-        (image :icon "4digits" :icon-size 16)
-        (label :class "battery" :text "${BAT}"))
-    )))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; WINDOW: make it a proper dock at the top
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defwindow topbar
-  :monitor    "DP-5"
-  :geometry   (geometry :x "0px" :y "0px" :width "100%" :height "3%" :anchor "top center")
-  :exclusive  true
-  :namespace  "eww-topbar"
-  :windowtype "dock"
-  :wm-ignore  false
-  (topbar))
+;; Import all window definitions
+(include "windows/topbar.yuck")

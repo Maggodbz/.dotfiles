@@ -4,8 +4,9 @@
   (box
     :orientation "h"
     :class       "topbar"
-    :hexpand     "true"
-    :spacing     1
+    :hexpand     true
+    :spacing    1
+    :space-evenly false
 
     ;; Left: workspaces
     (workspaces)
@@ -14,7 +15,7 @@
     (hyper-button)
 
     ;; Right: system indicators
-    (box :orientation "h" :class "right" :spacing 2
+    (box :orientation "h" :class "right" :spacing 10
       (network)
       (vpn-box)
       (clock)
@@ -25,7 +26,7 @@
 
 (defwindow topbar
   :monitor    "DP-5"
-  :geometry   (geometry :x "0px" :y "0px" :width "100%" :height "1%" :anchor "top center")
+  :geometry   (geometry :x "0px" :y "0px" :width "100%" :height "3%" :anchor "top center")
   :exclusive  true
   :namespace  "eww-topbar"
   :windowtype "dock"

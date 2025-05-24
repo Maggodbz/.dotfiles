@@ -1,0 +1,62 @@
+/* DARK THEME */
+
+/* Font Configuration */
+$font-family: "JetBrainsMono Nerd Font";
+$font-size-normal: 11px;
+$font-size-large: 14px;
+$font-weight: normal;
+
+/* Color Palette */
+$bg-primary: rgba(59, 78, 201, 0.95);
+$bg-secondary: #3B4252;
+$bg-alternate: #434C5E;
+$fg-primary: #ECEFF4;
+$fg-secondary: #D8DEE9;
+$accent-color: #88C0D0;
+$warning-color: #EBCB8B;
+$error-color: #BF616A;
+$success-color: #A3BE8C;
+
+/* Spacing */
+$padding-small: 2px;
+$padding-medium: 5px;
+$padding-large: 10px;
+$margin-small: 2px;
+$margin-medium: 5px;
+$margin-large: 10px;
+
+/* Widget-specific theming */
+
+/* Topbar */
+$topbar-bg: $bg-primary;
+$topbar-font-size: $font-size-normal;
+$topbar-padding: $padding-small;
+
+/* Workspaces */
+$workspace-active-bg: $accent-color;
+$workspace-active-fg: $bg-secondary;
+$workspace-inactive-bg: $bg-secondary;
+$workspace-inactive-fg: $fg-secondary;
+$workspace-width: 25px;
+$workspace-margin: $margin-small;
+
+/* Clock */
+$clock-fg: $fg-primary;
+$clock-padding: $padding-medium;
+
+/* Volume */
+$volume-slider-bg: $bg-secondary;
+$volume-slider-fill: $accent-color;
+$volume-slider-width: 80px;
+
+/* Battery */
+$battery-full-color: $success-color;
+$battery-medium-color: $warning-color;
+$battery-low-color: $error-color;
+$battery-charging-color: $success-color;
+
+/* Network */
+$network-connected-color: $success-color;
+$network-disconnected-color: $error-color;
+
+/* Other widgets... */
