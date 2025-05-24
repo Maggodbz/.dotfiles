@@ -2,10 +2,35 @@
   "layer": "top",
   "position": "top",
 
-  "modules-left": ["hyprland/workspaces"],
-  "modules-center": ["custom/hyper-mode"],
-  "modules-right": ["tray", "clock", "pulseaudio", "network", "backlight", "battery"],
-  
+  "modules-left": [
+    "hyprland/workspaces"
+  ],
+  "modules-center": [
+    "custom/hyper-mode"
+  ],
+  "modules-right": [
+    "tray",
+    "network",
+    "custom/enliteai-vpn",
+    "clock",
+    "pulseaudio",
+    "backlight",
+    "battery"
+  ],
+
+  "tray": {
+    "spacing": 10,
+    "tooltip": true
+  },
+
+  "custom/enliteai-vpn": {
+    "exec": "~/.config/waybar/modules/enliteai-vpn-status.sh",
+    "return-type": "json",
+    "interval": 5,
+    "tooltip": true,
+    "on-click": "~/.config/waybar/modules/enliteai-vpn-status.sh toggle"
+  },
+
   "hyprland/workspaces": {
     "format": "{name}",
     "all-outputs": true,
@@ -24,23 +49,35 @@
     "tooltip": true
   },
 
+  "clock": {
+    "format": "{:%Y-%m-%d %H:%M}",
+    "tooltip": true,
+    "tooltip-format": "{:%Y-%m-%d | Week %V | %H:%M:%S}"
+  },
+
   "backlight": {
-    "format": "\uf185 {percent}%",
-    "tooltip": false,
+    "format": "墳 {percent}%",
+    "tooltip": true,
+    "tooltip-format": "Brightness: {percent}%",
     "on-scroll-up": "brightnessctl set +1%",
     "on-scroll-down": "brightnessctl set 1%-"
   },
 
   "network": {
-    "format-wifi": "\uf012 {essid}",
+    "format-wifi": " {essid}",
     "format-ethernet": "🔌 {ifname}",
     "format-disconnected": "🚫",
-    "tooltip": false
+    "tooltip": true,
+    "tooltip-format-wifi": "SSID: {essid}\nSignal: {signalStrength}%\nFrequency: {frequency}GHz\nIP: {ipaddr}",
+    "tooltip-format-ethernet": "Interface: {ifname}\nIP: {ipaddr}\nGateway: {gwaddr}",
+    "tooltip-format-disconnected": "Network Disconnected"
   },
 
   "battery": {
-    "format": "\uf240 {capacity}% ",
+    "format": " {capacity}% ",
     "format-charging": "⚡ {capacity}%",
+    "format-good": " {capacity}% ",
+    "tooltip": false,
     "format-icons": {
       "80": "",
       "60": "",
@@ -51,10 +88,11 @@
   },
 
   "pulseaudio": {
-    "format": "\uf028 {volume}%",
+    "format": " {volume}%",
     "format-muted": "🔇",
+    "tooltip": true,
+    "tooltip-format": "Volume: {volume}%\nDevice: {desc}",
     "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +1%",
-    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -1%",
-    "tooltip": false
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -1%"
   }
 }

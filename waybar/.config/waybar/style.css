@@ -61,6 +61,12 @@
   color: #f8f8f2;
 }
 
+/* Battery module */
+#battery {
+  padding: 0 8px;
+  color: #ffffff;
+}
+
 /* Battery States */
 #battery.good {
   color: #a6e3a1;
@@ -70,6 +76,16 @@
 }
 #battery.critical {
   color: #f38ba8;
+  animation: blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
 }
 
 /* Audio States */
