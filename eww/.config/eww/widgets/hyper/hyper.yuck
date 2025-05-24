@@ -1,0 +1,10 @@
+;; Hyper‐mode
+(defpoll HYPER :interval "1s"
+  "./widgets/hyper/hyper-mode-status.sh")
+
+(defwidget hyper-button []
+  (box :orientation "h" :class "center" :spacing 2
+    (button
+      :class "hyper-button"
+      :onclick "bash -lc 'echo hyper > ~/.config/hypr/mode && hyprctl dispatch submap hyper'"
+      (label :class {HYPER.class} :text {HYPER.text})))) 

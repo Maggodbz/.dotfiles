@@ -18,7 +18,7 @@ toggle_vpn() {
 if [[ "$1" == "toggle" ]]; then
   toggle_vpn
 else
-  # Output status for waybar
+  # Output status for eww
   if is_vpn_connected; then
     echo '{"text":" 🟢","tooltip":"enliteAI VPN: connected"}'
   else

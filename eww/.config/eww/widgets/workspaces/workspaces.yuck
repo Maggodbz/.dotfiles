@@ -1,0 +1,19 @@
+;; Workspaces with icons
+(defpoll workspaces_json :interval "1s"
+  "./widgets/workspaces/get_workspaces.sh")
+
+(defwidget workspace-entry [workspace]
+  (box :class "workspace${workspace.active ? '-active' : ''}"
+       :space-evenly false
+       :spacing 4
+    (label :text "${workspace.id}: " :halign "start")
+    (for icon in {workspace.icons}
+      (image :path icon :image-width 16 :image-height 16))))
+
+(defwidget workspaces []
+  (box :orientation "h" 
+       :class "workspaces-container" 
+       :spacing 8
+       :space-evenly false
+    (for workspace in {workspaces_json.workspaces}
+      (workspace-entry :workspace workspace)))) 
