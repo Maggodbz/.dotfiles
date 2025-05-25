@@ -6,22 +6,29 @@
     :class       "topbar"
     :hexpand     true
     :spacing    1
-    :space-evenly false
+    :space-evenly true
 
     ;; Left: workspaces
-    (workspaces)
+    (box :orientation "h" :class "left"
+      (workspaces)
+    )
 
     ;; Center: hyper mode
-    (hyper-button)
+    (box :orientation "h" :class "center"
+      (hyper-button)
+    )
 
     ;; Right: system indicators
-    (box :orientation "h" :class "right" :spacing 10
-      (network)
-      (vpn-box)
-      (clock)
-      (volume)
+    (box :orientation "h" :class "right"
+      :space-evenly false
+      :spacing 8
+      :halign "end"
+      (battery)
       (backlight)
-      (battery))
+      (volume)
+      (clock)
+      (vpn-box)
+      (network))
   ))
 
 (defwindow topbar

@@ -1,9 +1,10 @@
 ;; Battery
-(defpoll BAT :interval "10s"
-  "bash -lc 'cat /sys/class/power_supply/BAT0/capacity \
-     | awk \"{printf \\\"%d%%\\\", \\$1}\"'")
+(defpoll BATTERY :interval "10s"
+  "~/.config/eww/widgets/battery/battery.sh")
 
 (defwidget battery []
-  (box :spacing 2
-    (image :icon "4digits" :icon-size "small-toolbar")
-    (label :class "battery" :text "${BAT}"))) 
+  (box :spacing 2 :tooltip {BATTERY.tooltip}
+    (image :icon {BATTERY.icon} :icon-size "small-toolbar")
+    (label :class "battery" 
+           :text {BATTERY.percentage}
+           :style {BATTERY.style}))) 

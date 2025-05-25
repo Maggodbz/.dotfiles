@@ -8,16 +8,44 @@
 // windows
 @import "./theme/dark.scss";
 
-// wait for the theme to be loaded
-@import "./windows/topbar.scss";
+// //////////////////////////////////////////
+// /// Windows
+// //////////////////////////////////////////
 
-// // widgets
-// @import "./widgets/workspaces/workspaces.scss";
-// @import "./widgets/hyper/hyper.scss";
-// @import "./widgets/network/network.scss";
-// @import "./widgets/vpn/vpn.scss";
-// @import "./widgets/clock/clock.scss";
-// @import "./widgets/volume/volume.scss";
-// @import "./widgets/backlight/backlight.scss";
-// @import "./widgets/battery/battery.scss";
+// /// Topbar
+.topbar {
+  background-color: $topbar-bg;
+}
 
+.topbar label {
+  font-size: $topbar-font-size;
+  margin: $margin-small;
+  color: $fg-primary;
+}
+
+.center {
+  background-color: transparent;
+}
+
+.right {
+  background-color: transparent;
+  margin-right: 8px;
+}
+
+
+
+// //////////////////////////////////////////
+// /// Widgets
+// //////////////////////////////////////////
+
+// General icon styling
+image {
+  color: $fg-primary;
+}
+
+/// Hyper
+.hyper-button label {
+  color: $hyper-fg;
+  font-size: 13px;
+  font-weight: bold;
+}
