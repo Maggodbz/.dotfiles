@@ -77,6 +77,10 @@ ZSH_THEME="robbyrussell"
 plugins=(git z zsh-autosuggestions zsh-syntax-highlighting fzf docker sudo history)
 source $ZSH/oh-my-zsh.sh
 
+# Tab completion configuration
+bindkey '^I' complete-word       # tab completes commands/paths
+bindkey '^[[Z' autosuggest-accept  # shift+tab accepts autosuggestion
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
