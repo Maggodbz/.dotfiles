@@ -1,0 +1,26 @@
+;; Dark theme icon configuration
+(defvar icon_theme "Numix-Circle")
+(defvar icon_dir "/usr/share/icons/${icon_theme}")
+(defvar app_icon_dir "${icon_dir}/48/apps")
+(defvar status_icon_dir "${icon_dir}/24/status")
+
+;; Application-specific icon overrides
+(defvar app_icons '{
+  "persistent-term": "terminal.svg",
+  "yazi-overlay": "file-manager.svg"
+}')
+
+;; Widget icon sets
+(defvar battery_icons '{
+  "critical": "battery-caution",
+  "low": "battery-low",
+  "good": "battery-good",
+  "full": "battery-full",
+  "charging": "battery-good-charging"
+}')
+
+(defvar network_icons '{
+  "wifi": "network-wireless",
+  "ethernet": "network-wired",
+  "disconnected": "network-offline"
+}')

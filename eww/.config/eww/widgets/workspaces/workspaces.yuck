@@ -7,7 +7,7 @@
        :space-evenly false
        :spacing 10
        :style "${workspace.active ? 'background-color: rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 2px 4px;' : ''}"
-    (label :text "${workspace.id}: " :halign "start")
+    (label :text "${workspace.display_name} " :halign "start")
     (for icon in {workspace.icons}
       (image :path icon :image-width 24 :image-height 24))))
 

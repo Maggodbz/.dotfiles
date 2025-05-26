@@ -37,12 +37,24 @@ while read -r win; do
     fi
 done < <(hyprctl clients -j 2>/dev/null | jq -c '.[]')
 
-# sorted list of workspace IDs
-mapfile -t wsids < <(
+# Get all workspace IDs
+mapfile -t all_wsids < <(
     hyprctl workspaces -j |
     jq -r '.[].id' |
     sort -n
 )
+
+# Custom sort: Special workspace (42) first, then the rest in numeric order
+wsids=()
+for ws in "${all_wsids[@]}"; do
+    if [ "$ws" == "42" ]; then
+        # Add special workspace to the beginning
+        wsids=("$ws" "${wsids[@]}")
+    else
+        # Add other workspaces to the end
+        wsids+=("$ws")
+    fi
+done
 
 # build the JSON output
 echo -n '{'
@@ -66,8 +78,16 @@ for ws in "${wsids[@]}"; do
         is_active="true"
     fi
     
+    # Set display name based on workspace ID
+    if [ "$ws" == "42" ]; then
+        display_name="Special:"
+    else
+        display_name="$ws:"
+    fi
+    
     echo -n "{"
     echo -n "\"id\": \"$ws\","
+    echo -n "\"display_name\": \"$display_name\","
     echo -n "\"active\": $is_active,"
     echo -n "\"icons\": [$icons]"
     echo -n "}"

@@ -1,6 +1,8 @@
 ;; Main eww configuration file
 ;; This file imports all widgets and windows
 
+(include "theme/dark-icons.yuck")
+
 ;; Import all widget modules
 (include "widgets/workspaces/workspaces.yuck")
 (include "widgets/hyper/hyper.yuck")

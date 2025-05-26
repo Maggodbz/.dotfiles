@@ -4,7 +4,9 @@
 
 (defwidget battery []
   (box :spacing 2 :tooltip {BATTERY.tooltip}
-    (image :icon {BATTERY.icon} :icon-size "small-toolbar")
+    (image :path "/usr/share/icons/Numix-Circle/24/status/${BATTERY.icon_name}.svg" 
+           :image-width 24 
+           :image-height 24)
     (label :class "battery" 
            :text {BATTERY.percentage}
-           :style {BATTERY.style}))) 
+           :style {BATTERY.style})))
