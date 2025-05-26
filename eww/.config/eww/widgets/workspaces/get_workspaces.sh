@@ -15,9 +15,8 @@ get_icon() {
     echo "$DEFAULT_ICON"
 }
 
-# associative arrays to hold icons per workspace and seen keys
+# associative arrays to hold icons per workspace
 declare -A icons_per_ws
-declare -A seen
 
 # Get active workspace
 active_ws=$(hyprctl activewindow -j 2>/dev/null | jq -r '.workspace.id // empty')
@@ -25,14 +24,11 @@ if [ -z "$active_ws" ]; then
   active_ws=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .activeWorkspace.id')
 fi
 
-# collect one icon per unique (workspace, class)
+# collect icons for all windows
 while read -r win; do
     ws=$(jq -r '.workspace.id' <<<"$win")
     cls=$(jq -r '.class' <<<"$win")
-    key="$ws:$cls"
-    [[ -n "${seen[$key]}" ]] && continue
-    seen[$key]=1
-
+    
     icon=$(get_icon "$cls")
     if [ -n "${icons_per_ws[$ws]}" ]; then
         icons_per_ws[$ws]+=",\"$icon\""
