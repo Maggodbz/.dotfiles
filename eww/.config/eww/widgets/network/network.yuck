@@ -1,9 +1,9 @@
-;; Network SSID (or "–" if none)
-(defpoll NET :interval "5s"
-  "bash -lc 'nmcli -t -f NAME,STATE connection show --active \
-     | grep activated | grep -v \"lo\\|docker\\|br-\\|tun\" | head -n1 | cut -d: -f1 || echo –'")
+;; Network
+(defpoll NETWORK :interval "5s"
+  "~/.config/eww/widgets/network/get-network-icon.sh")
 
 (defwidget network []
-  (box :spacing 2
-    (image :icon "network-wireless" :icon-size "small-toolbar")
-    (label :class "network" :text "${NET}"))) 
+  (button :class "network" :onclick "echo 'Network clicked'" :tooltip {NETWORK.tooltip}
+    (image :path "/usr/share/icons/breeze-dark/status/24/${NETWORK.icon}.svg"
+           :image-width 28
+           :image-height 28))) 

@@ -43,9 +43,156 @@ image {
   color: $fg-primary;
 }
 
-/// Hyper
-.hyper-button label {
-  color: $hyper-fg;
-  font-size: 13px;
+/// Hyper - base styles for both modes
+.hyper, .normal {
+  all: unset;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.hyper {
+  background-color: $hyper-active-bg;
+}
+
+.normal {
+  background-color: $normal-active-bg;
+}
+
+.hyper:hover, .normal:hover {
+  border: 1px solid $accent-color;
+}
+
+.hyper label, .normal label {
+  font-size: 16px;
   font-weight: bold;
+}
+
+/* Mode-specific colors */
+.hyper label {
+  background-color: $hyper-active-bg;
+  color: $hyper-active-fg; 
+}
+
+.normal label {
+  background-color: $normal-active-bg;
+  color: $normal-active-fg;
+}
+
+/// Volume - consistent styling pattern
+.volume {
+  all: unset;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  background-color: $bg-primary;
+  border: 1px solid $bg-primary;
+}
+
+.volume:hover {
+  border: 1px solid $accent-color;
+}
+
+.volume label {
+  font-size: 10px;
+  font-weight: bold;
+  color: $fg-primary;
+}
+
+/// VPN - consistent styling pattern
+.vpn {
+  all: unset;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  background-color: $bg-primary;
+  border: 1px solid $bg-primary;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.vpn:hover {
+  border: 1px solid $accent-color;
+}
+
+/// Network - consistent styling pattern
+.network {
+  all: unset;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  background-color: $bg-primary;
+  border: 1px solid $bg-primary;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.network:hover {
+  border: 1px solid $accent-color;
+}
+
+/// Clock - consistent styling pattern
+.clock {
+  all: unset;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  background-color: $bg-primary;
+  border: 1px solid $bg-primary;
+  min-width: 60px;
+  min-height: 36px;
+}
+
+.clock:hover {
+  border: 1px solid $accent-color;
+}
+
+.clock label {
+  font-size: 10px;
+  font-weight: bold;
+  color: $fg-primary;
+}
+
+/// Backlight - consistent styling pattern
+.backlight {
+  all: unset;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  background-color: $bg-primary;
+  border: 1px solid $bg-primary;
+  min-width: 50px;
+  min-height: 36px;
+}
+
+.backlight:hover {
+  border: 1px solid $accent-color;
+}
+
+.backlight label {
+  font-size: 10px;
+  font-weight: bold;
+  color: $fg-primary;
+}
+
+/// Battery - consistent styling pattern
+.battery {
+  all: unset;
+  border: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  background-color: $bg-primary;
+  border: 1px solid $bg-primary;
+  min-width: 50px;
+  min-height: 36px;
+}
+
+.battery:hover {
+  border: 1px solid $accent-color;
+}
+
+.battery label {
+  font-size: 10px;
+  font-weight: bold;
+  color: $fg-primary;
 }

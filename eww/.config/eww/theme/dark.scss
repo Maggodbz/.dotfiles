@@ -9,8 +9,14 @@ $font-size-normal: 11px;
 $font-size-large: 14px;
 $font-weight: normal;
 
+/* Icon Configuration */
+$icon-size-small: 24px;
+$icon-size-normal: 28px;
+$icon-size-large: 32px;
+$icon-filter: brightness(0) invert(1);  // Force white icons
+
 /* Color Palette */
-$bg-primary: rgba(59, 65, 99, 0.65);
+$bg-primary: rgba(85, 87, 102, 0.65);
 $bg-secondary: #3B4252;
 $bg-alternate: #434C5E;
 $fg-primary: #ECEFF4;
@@ -69,3 +75,18 @@ $hyper-padding: $padding-small;
 $hyper-margin: $margin-small;
 $hyper-width: 25px;
 $hyper-height: 25px;
+
+/* Hyper mode color variables */
+$hyper-active-bg: $accent-color;
+$hyper-active-fg: $bg-secondary;
+$normal-active-bg: $bg-secondary;
+$normal-active-fg: $accent-color;
+
+/* System Info Tooltip */
+$tooltip-bg: rgba(45, 47, 62, 0.95);
+$tooltip-border: 1px solid $accent-color;
+$tooltip-border-radius: 8px;
+$tooltip-padding: 12px;
+$tooltip-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+$tooltip-font-size: 10px;
+$tooltip-line-height: 1.4;

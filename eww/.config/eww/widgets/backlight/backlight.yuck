@@ -1,8 +1,11 @@
 ;; Backlight
 (defpoll BRT :interval "1s"
-  "bash -lc 'brightnessctl get | awk \"NR==1 {printf \\\"%d%%\\\", \\$1}\"'")
+  "brightnessctl info | grep -oE '\\([0-9]+%\\)' | tr -d '()'")
 
 (defwidget backlight []
-  (box :spacing 2
-    (image :icon "display-brightness" :icon-size "small-toolbar")
-    (label :class "backlight" :text "${BRT}"))) 
+  (button :class "backlight" :onclick "echo 'Backlight clicked'"
+    (box :spacing 2
+      (image :path "/usr/share/icons/breeze-dark/actions/22/brightness-low.svg"
+             :image-width 28
+             :image-height 28)
+      (label :text "${BRT}")))) 

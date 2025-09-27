@@ -1,26 +1,48 @@
 ;; Dark theme icon configuration
-(defvar icon_theme "Numix-Circle")
-(defvar icon_dir "/usr/share/icons/${icon_theme}")
-(defvar app_icon_dir "${icon_dir}/48/apps")
-(defvar status_icon_dir "${icon_dir}/24/status")
+
+;; Application icons - use direct paths
+(defvar app_icon_theme "Numix-Circle")
+(defvar app_icon_dir "/usr/share/icons/Numix-Circle/48/apps")
+(defvar app_icon_fallback "/usr/share/icons/Numix-Circle/48/apps/application-default-icon.svg")
+
+
+;; System status icons (using Breeze-Dark for better system indicators)
+(defvar status_icon_theme "breeze-dark")
+(defvar status_icon_dir "/usr/share/icons/breeze-dark/status/24")
+(defvar status_icon_fallback "/usr/share/icons/breeze-dark/status/24/state-information.svg")
 
 ;; Application-specific icon overrides
-(defvar app_icons '{
-  "persistent-term": "terminal.svg",
+(defvar workspace_icons '{
+  "terminal-overlay": "terminal.svg",
   "yazi-overlay": "file-manager.svg"
 }')
 
-;; Widget icon sets
+;; Widget icon sets with full paths for better status icons
 (defvar battery_icons '{
-  "critical": "battery-caution",
-  "low": "battery-low",
-  "good": "battery-good",
-  "full": "battery-full",
-  "charging": "battery-good-charging"
+  "battery-010": "/usr/share/icons/breeze-dark/status/24/battery-010.svg",
+  "battery-040": "/usr/share/icons/breeze-dark/status/24/battery-040.svg",
+  "battery-060": "/usr/share/icons/breeze-dark/status/24/battery-060.svg",
+  "battery-080": "/usr/share/icons/breeze-dark/status/24/battery-080.svg",
+  "battery-100": "/usr/share/icons/breeze-dark/status/24/battery-100.svg",
+  "battery-010-charging": "/usr/share/icons/breeze-dark/status/24/battery-010-charging.svg",
+  "battery-040-charging": "/usr/share/icons/breeze-dark/status/24/battery-040-charging.svg", 
+  "battery-060-charging": "/usr/share/icons/breeze-dark/status/24/battery-060-charging.svg",
+  "battery-080-charging": "/usr/share/icons/breeze-dark/status/24/battery-080-charging.svg",
+  "battery-100-charging": "/usr/share/icons/breeze-dark/status/24/battery-100-charging.svg"
 }')
 
 (defvar network_icons '{
-  "wifi": "network-wireless",
-  "ethernet": "network-wired",
-  "disconnected": "network-offline"
+  "wifi-excellent": "/usr/share/icons/breeze-dark/status/24/network-wireless-connected-100.svg",
+  "wifi-good": "/usr/share/icons/breeze-dark/status/24/network-wireless-connected-75.svg",
+  "wifi-ok": "/usr/share/icons/breeze-dark/status/24/network-wireless-connected-50.svg",
+  "wifi-low": "/usr/share/icons/breeze-dark/status/24/network-wireless-connected-25.svg",
+  "ethernet": "/usr/share/icons/breeze-dark/status/24/network-wired-activated.svg",
+  "disconnected": "/usr/share/icons/breeze-dark/status/24/network-offline.svg"
+}')
+
+(defvar volume_icons '{
+  "muted": "/usr/share/icons/breeze-dark/status/24/audio-volume-muted.svg",
+  "low": "/usr/share/icons/breeze-dark/status/24/audio-volume-low.svg",
+  "medium": "/usr/share/icons/breeze-dark/status/24/audio-volume-medium.svg",
+  "high": "/usr/share/icons/breeze-dark/status/24/audio-volume-high.svg"
 }')

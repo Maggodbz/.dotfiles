@@ -1,5 +1,5 @@
 ;; Workspaces with icons
-(defpoll workspaces_json :interval "1s"
+(defpoll workspaces_json :interval "100ms"
   "./widgets/workspaces/get_workspaces.sh")
 
 (defwidget workspace-entry [workspace]

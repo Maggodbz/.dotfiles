@@ -1,12 +1,54 @@
 #!/bin/bash
 
-# Icon directory - adjust as needed for your system
+# Icon directory - from eww theme settings
 ICON_DIR="/usr/share/icons/Numix-Circle/48/apps"
 DEFAULT_ICON="$ICON_DIR/application-default-icon.svg"
+
+# Custom icon directory - can be generated from eww variables if needed
+CUSTOM_ICON_FILE="$HOME/.config/eww/custom_app_icons.json"
+
+# Check if custom icons file exists
+if [ -f "$CUSTOM_ICON_FILE" ]; then
+    HAS_CUSTOM_ICONS=true
+else
+    HAS_CUSTOM_ICONS=false
+fi
 
 # lookup an icon for a given window class
 get_icon() {
     local class="${1,,}"
+    
+    # Check for custom icon first
+    if [ "$HAS_CUSTOM_ICONS" = true ]; then
+        local custom_icon
+        custom_icon=$(jq -r ".\"$class\" // empty" "$CUSTOM_ICON_FILE" 2>/dev/null)
+        if [ -n "$custom_icon" ] && [ -f "$custom_icon" ]; then
+            echo "$custom_icon"
+            return
+        fi
+    fi
+    
+    # Check for class-specific mappings
+    case "$class" in
+        "firefox")
+            echo "$ICON_DIR/firefox.svg"
+            return
+            ;;
+        "code")
+            echo "$ICON_DIR/visual-studio-code.svg"
+            return
+            ;;
+        "persistent-term")
+            echo "$ICON_DIR/terminal.svg"
+            return
+            ;;
+        "yazi-overlay")
+            echo "$ICON_DIR/file-manager.svg"
+            return
+            ;;
+    esac
+    
+    # Fall back to regular icon lookup
     for name in "$class" "${class%-*}" "${class##*.}"; do
         local f
         f=$(find "$ICON_DIR" -iname "*$name*.svg" 2>/dev/null | head -n1)
