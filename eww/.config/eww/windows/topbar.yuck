@@ -26,9 +26,7 @@
       (battery)
       (backlight)
       (volume)
-      (clock)
-      (vpn)
-      (network))
+      (clock))
   ))
 
 (defwindow topbar

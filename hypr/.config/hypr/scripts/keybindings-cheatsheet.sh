@@ -14,6 +14,7 @@ c                     Close Active Window
 t                     Open Terminal Overlay
 a                     Open App Launcher
 f                     Open File Manager Overlay
+m                     Network Metrics Dashboard
 i                     Show This Keybindings Cheatsheet
 1-9,0                 Switch to Workspace
 SHIFT + 1-9,0         Move Window to Workspace
@@ -24,11 +25,9 @@ wofi --dmenu \
     --no-actions \
     --insensitive \
     --prompt "Keybindings" \
-    --hide-search \
-    --key-up "k" \
-    --key-down "j" \
     --normal-window \
-    --class "keybindings-cheatsheet" \
+    --width 1200 \
+    --height 700 \
     < "$KEYBINDINGS_FILE" > /dev/null
 
 # Clean up
