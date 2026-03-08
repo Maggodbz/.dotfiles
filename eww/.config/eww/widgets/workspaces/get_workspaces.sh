@@ -46,6 +46,22 @@ get_icon() {
             echo "$ICON_DIR/file-manager.svg"
             return
             ;;
+        "wofi")
+            echo "$ICON_DIR/app-launcher.svg"
+            return
+            ;;
+        "netmetrics-overlay")
+            echo "$ICON_DIR/utilities-system-monitor.svg"
+            return
+            ;;
+        "keybindings-overlay")
+            echo "$ICON_DIR/preferences-desktop-keyboard-shortcuts.svg"
+            return
+            ;;
+        "bluetooth-overlay")
+            echo "$ICON_DIR/bluetooth-active.svg"
+            return
+            ;;
     esac
     
     # Fall back to regular icon lookup
@@ -86,14 +102,10 @@ mapfile -t all_wsids < <(
     sort -n
 )
 
-# Custom sort: Special workspace (42) first, then the rest in numeric order
+# Filter out overlay workspace (42) – its icons live in the hyper button
 wsids=()
 for ws in "${all_wsids[@]}"; do
-    if [ "$ws" == "42" ]; then
-        # Add special workspace to the beginning
-        wsids=("$ws" "${wsids[@]}")
-    else
-        # Add other workspaces to the end
+    if [ "$ws" != "42" ]; then
         wsids+=("$ws")
     fi
 done
@@ -120,12 +132,7 @@ for ws in "${wsids[@]}"; do
         is_active="true"
     fi
     
-    # Set display name based on workspace ID
-    if [ "$ws" == "42" ]; then
-        display_name="Special:"
-    else
-        display_name="$ws:"
-    fi
+    display_name="$ws:"
     
     echo -n "{"
     echo -n "\"id\": \"$ws\","

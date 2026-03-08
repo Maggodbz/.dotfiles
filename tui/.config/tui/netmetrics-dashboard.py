@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Network Live Metrics Dashboard — Rich TUI"""
+"""Network Live Metrics Dashboard -- Rich TUI overlay."""
 
-import subprocess
 import sys
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from rich.align import Align
 from rich.console import Console, Group
@@ -14,6 +13,8 @@ from rich.live import Live
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
+
+from theme import NORD, listen_for_keys, overlay_panel, run
 
 
 # ── Data Models ──────────────────────────────────────────────────────────────
@@ -44,19 +45,6 @@ class K8sContext:
 
 
 # ── Data Collection ──────────────────────────────────────────────────────────
-
-
-def run(cmd: str, timeout: int = 5) -> tuple[int, str]:
-    """Run a shell command and return (exit_code, stdout)."""
-    try:
-        r = subprocess.run(
-            cmd, shell=True, capture_output=True, text=True, timeout=timeout
-        )
-        return r.returncode, r.stdout.strip()
-    except subprocess.TimeoutExpired:
-        return 1, ""
-    except Exception:
-        return 1, ""
 
 
 def get_vpns() -> list[VPN]:
@@ -158,21 +146,11 @@ def check_k8s(ctx: K8sContext) -> bool:
 
 # ── Rendering ────────────────────────────────────────────────────────────────
 
-THEME = {
-    "accent": "#88C0D0",
-    "green": "#A3BE8C",
-    "red": "#BF616A",
-    "yellow": "#EBCB8B",
-    "dim": "#4C566A",
-    "fg": "#ECEFF4",
-    "fg_dim": "#D8DEE9",
-}
-
 
 def make_vpn_table(vpns: list[VPN]) -> Table:
     table = Table(
         show_header=True,
-        header_style=f"bold {THEME['accent']}",
+        header_style=f"bold {NORD['accent']}",
         box=None,
         padding=(0, 2),
         expand=True,
@@ -184,16 +162,16 @@ def make_vpn_table(vpns: list[VPN]) -> Table:
 
     for vpn in vpns:
         if vpn.connected:
-            dot = Text("●", style=THEME["green"])
-            status = Text("Connected", style=f"bold {THEME['green']}")
+            dot = Text("\u25cf", style=NORD["green"])
+            status = Text("Connected", style=f"bold {NORD['green']}")
         else:
-            dot = Text("○", style=THEME["red"])
-            status = Text("Disconnected", style=f"bold {THEME['red']}")
+            dot = Text("\u25cb", style=NORD["red"])
+            status = Text("Disconnected", style=f"bold {NORD['red']}")
 
         table.add_row(
             dot,
-            Text(vpn.name, style=THEME["fg"]),
-            Text(vpn.kind, style=THEME["fg_dim"]),
+            Text(vpn.name, style=NORD["fg"]),
+            Text(vpn.kind, style=NORD["fg_dim"]),
             status,
         )
 
@@ -203,7 +181,7 @@ def make_vpn_table(vpns: list[VPN]) -> Table:
 def make_ssh_table(hosts: list[SSHHost]) -> Table:
     table = Table(
         show_header=True,
-        header_style=f"bold {THEME['accent']}",
+        header_style=f"bold {NORD['accent']}",
         box=None,
         padding=(0, 2),
         expand=True,
@@ -217,19 +195,19 @@ def make_ssh_table(hosts: list[SSHHost]) -> Table:
         target = f"{h.host}:{h.port}" if h.port != 22 else h.host
 
         if h.reachable is None:
-            dot = Text("◌", style=THEME["yellow"])
-            status = Text("Checking…", style=f"italic {THEME['yellow']}")
+            dot = Text("\u25cc", style=NORD["yellow"])
+            status = Text("Checking\u2026", style=f"italic {NORD['yellow']}")
         elif h.reachable:
-            dot = Text("●", style=THEME["green"])
-            status = Text("Reachable", style=f"bold {THEME['green']}")
+            dot = Text("\u25cf", style=NORD["green"])
+            status = Text("Reachable", style=f"bold {NORD['green']}")
         else:
-            dot = Text("○", style=THEME["red"])
-            status = Text("Unreachable", style=f"bold {THEME['red']}")
+            dot = Text("\u25cb", style=NORD["red"])
+            status = Text("Unreachable", style=f"bold {NORD['red']}")
 
         table.add_row(
             dot,
-            Text(h.alias, style=THEME["fg"]),
-            Text(target, style=THEME["fg_dim"]),
+            Text(h.alias, style=NORD["fg"]),
+            Text(target, style=NORD["fg_dim"]),
             status,
         )
 
@@ -239,7 +217,7 @@ def make_ssh_table(hosts: list[SSHHost]) -> Table:
 def make_k8s_table(contexts: list[K8sContext]) -> Table:
     table = Table(
         show_header=True,
-        header_style=f"bold {THEME['accent']}",
+        header_style=f"bold {NORD['accent']}",
         box=None,
         padding=(0, 2),
         expand=True,
@@ -250,21 +228,23 @@ def make_k8s_table(contexts: list[K8sContext]) -> Table:
     table.add_column("Access", ratio=2, justify="right")
 
     for ctx in contexts:
-        indicator = Text("▸", style=f"bold {THEME['accent']}") if ctx.active else Text(" ")
+        indicator = (
+            Text("\u25b8", style=f"bold {NORD['accent']}") if ctx.active else Text(" ")
+        )
 
         if ctx.accessible is None:
-            access = Text("Checking…", style=f"italic {THEME['yellow']}")
+            access = Text("Checking\u2026", style=f"italic {NORD['yellow']}")
         elif ctx.accessible:
-            access = Text("✓ Access OK", style=f"bold {THEME['green']}")
+            access = Text("\u2713 Access OK", style=f"bold {NORD['green']}")
         else:
-            access = Text("✗ Unreachable", style=f"bold {THEME['red']}")
+            access = Text("\u2717 Unreachable", style=f"bold {NORD['red']}")
 
-        name_style = f"bold {THEME['fg']}" if ctx.active else THEME["fg"]
+        name_style = f"bold {NORD['fg']}" if ctx.active else NORD["fg"]
 
         table.add_row(
             indicator,
             Text(ctx.name, style=name_style),
-            Text(ctx.cluster, style=THEME["fg_dim"]),
+            Text(ctx.cluster, style=NORD["fg_dim"]),
             access,
         )
 
@@ -283,7 +263,7 @@ def build_dashboard(
         make_vpn_table(vpns),
         title="[bold]VPNs[/bold]",
         title_align="left",
-        border_style=THEME["dim"],
+        border_style=NORD["dim"],
         padding=(1, 2),
     )
 
@@ -291,7 +271,7 @@ def build_dashboard(
         make_ssh_table(ssh_hosts),
         title="[bold]SSH Hosts[/bold]",
         title_align="left",
-        border_style=THEME["dim"],
+        border_style=NORD["dim"],
         padding=(1, 2),
     )
 
@@ -299,24 +279,18 @@ def build_dashboard(
         make_k8s_table(k8s_contexts),
         title="[bold]Kubernetes Contexts[/bold]",
         title_align="left",
-        border_style=THEME["dim"],
+        border_style=NORD["dim"],
         padding=(1, 2),
     )
 
     footer = Text(
-        f"  Last refresh: {refresh_time}  ·  Refreshing every 5s  ·  q to quit",
-        style=THEME["fg_dim"],
+        f"  Last refresh: {refresh_time}  \u00b7  Refreshing every 5s  \u00b7  q to quit",
+        style=NORD["fg_dim"],
     )
 
     content = Group(vpn_panel, "", ssh_panel, "", k8s_panel, "", footer)
 
-    return Panel(
-        Align.center(content, width=72),
-        title=f"[bold {THEME['accent']}]  Network Live Metrics [/bold {THEME['accent']}]",
-        border_style=THEME["accent"],
-        padding=(1, 3),
-        expand=True,
-    )
+    return overlay_panel(content, title="Network Live Metrics")
 
 
 # ── Main Loop ────────────────────────────────────────────────────────────────
@@ -325,37 +299,16 @@ def build_dashboard(
 def main() -> None:
     console = Console()
 
-    # Initial data (fast, synchronous)
     vpns = get_vpns()
     ssh_hosts = get_ssh_hosts()
     k8s_contexts = get_k8s_contexts()
 
-    # Quit flag
     quit_event = threading.Event()
 
-    def listen_for_quit():
-        """Listen for 'q' keypress in a thread."""
-        try:
-            import termios
-            import tty
+    def quit_action():
+        quit_event.set()
 
-            fd = sys.stdin.fileno()
-            old = termios.tcgetattr(fd)
-            try:
-                tty.setcbreak(fd)
-                while not quit_event.is_set():
-                    ch = sys.stdin.read(1)
-                    if ch.lower() == "q":
-                        quit_event.set()
-                        return
-            finally:
-                termios.tcsetattr(fd, termios.TCSADRAIN, old)
-        except (termios.error, OSError, ValueError):
-            # No TTY available (e.g. piped input) — just wait for SIGINT
-            quit_event.wait()
-
-    quit_thread = threading.Thread(target=listen_for_quit, daemon=True)
-    quit_thread.start()
+    listen_for_keys({"q": quit_action}, quit_event)
 
     try:
         with Live(
@@ -365,19 +318,16 @@ def main() -> None:
             screen=True,
         ) as live:
             while not quit_event.is_set():
-                # Refresh base data
                 vpns = get_vpns()
                 ssh_hosts = get_ssh_hosts()
                 k8s_contexts = get_k8s_contexts()
 
-                # Show dashboard with "checking" states
                 live.update(
                     build_dashboard(
                         vpns, ssh_hosts, k8s_contexts, time.strftime("%H:%M:%S")
                     )
                 )
 
-                # Run async checks
                 with ThreadPoolExecutor(max_workers=8) as pool:
                     ssh_futures = {
                         pool.submit(check_ssh, h): h for h in ssh_hosts
@@ -399,7 +349,6 @@ def main() -> None:
                             ctx = k8s_futures[future]
                             ctx.accessible = future.result()
 
-                        # Live update as each check completes
                         live.update(
                             build_dashboard(
                                 vpns,
@@ -409,14 +358,12 @@ def main() -> None:
                             )
                         )
 
-                # Final render with all results
                 live.update(
                     build_dashboard(
                         vpns, ssh_hosts, k8s_contexts, time.strftime("%H:%M:%S")
                     )
                 )
 
-                # Wait 5s but check quit every 250ms
                 for _ in range(20):
                     if quit_event.is_set():
                         break
@@ -428,4 +375,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -5,10 +5,19 @@
 (defpoll SYSTEM_INFO_TT :interval "2s"
   "~/.config/eww/widgets/hyper/system-info-tooltip.sh")
 
+(defpoll OVERLAY_ICONS :interval "500ms"
+  "./widgets/hyper/get-overlay-icons.sh")
+
 (defwidget hyper-button []
   (box :orientation "h" :class "center" :spacing 8
     (button
       :class {HYPER.class}
       :onclick "~/.config/eww/widgets/hyper/toggle-mode.sh"
       :tooltip {SYSTEM_INFO_TT}
-      (label :text {HYPER.text}))))  
+      (box :orientation "h" :spacing 6 :space-evenly false
+        (label :text {HYPER.text})
+        (for icon in OVERLAY_ICONS
+          (image :path icon
+                 :image-width 20
+                 :image-height 20
+                 :class "overlay-icon"))))))
