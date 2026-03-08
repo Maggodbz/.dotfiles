@@ -22,7 +22,8 @@ if hyprctl clients -j | jq -e ".[] | select(.class == \"$APP_CLASS\" and .worksp
     # App exists in overlay workspace, move it to the current workspace
     hyprctl dispatch movetoworkspace "$(hyprctl activeworkspace -j | jq -r '.id'),class:$APP_CLASS"
     
-    # Focus the app
+    # Re-center on the currently focused monitor and focus
+    hyprctl dispatch centerwindow "class:$APP_CLASS"
     hyprctl dispatch focuswindow "class:$APP_CLASS"
 elif hyprctl clients -j | jq -e ".[] | select(.class == \"$APP_CLASS\")" > /dev/null; then
     # App exists on a visible workspace, move it to the overlay workspace

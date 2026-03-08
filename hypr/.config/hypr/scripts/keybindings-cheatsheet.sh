@@ -15,6 +15,7 @@ t                     Open Terminal Overlay
 a                     Open App Launcher
 f                     Open File Manager Overlay
 m                     Network Metrics Dashboard
+d                     Toggle Mirror Monitors
 i                     Show This Keybindings Cheatsheet
 1-9,0                 Switch to Workspace
 SHIFT + 1-9,0         Move Window to Workspace

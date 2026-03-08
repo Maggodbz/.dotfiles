@@ -30,7 +30,6 @@
   ))
 
 (defwindow topbar
-  :monitor    0
   :geometry   (geometry :x "0px" :y "0px" :width "100%" :height "3%" :anchor "top center")
   :exclusive  true
   :namespace  "eww-topbar"
