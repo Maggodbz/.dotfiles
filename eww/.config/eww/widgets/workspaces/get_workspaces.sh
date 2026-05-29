@@ -62,6 +62,10 @@ get_icon() {
             echo "$ICON_DIR/bluetooth-active.svg"
             return
             ;;
+        "jarvis-overlay")
+            echo "$ICON_DIR/agent.svg"
+            return
+            ;;
     esac
     
     # Fall back to regular icon lookup

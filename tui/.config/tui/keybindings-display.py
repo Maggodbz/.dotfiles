@@ -25,6 +25,7 @@ KEYBINDINGS = [
     ("m", "Network Metrics Dashboard"),
     ("b", "Bluetooth Manager"),
     ("i", "Keybindings Cheatsheet (this)"),
+    ("SPACE", "Jarvis AI Assistant"),
     ("d", "Toggle Mirror Monitors"),
     ("ESCAPE", "Logout Menu (toggle)"),
     ("", ""),

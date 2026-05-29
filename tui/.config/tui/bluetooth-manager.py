@@ -43,6 +43,51 @@ class AdapterState:
     name: str = "hci0"
 
 
+# ── Pairing (agent-backed session) ───────────────────────────────────────────
+
+
+def pair_connect(mac: str, connect: bool = True) -> tuple[bool, str]:
+    """Pair (and optionally connect) within a single bluetoothctl session that
+    registers a default agent. A bare `bluetoothctl pair` run with captured
+    stdin has no agent, so the bond is not authenticated and collapses after a
+    few seconds. Keeping one session alive with `agent on`/`default-agent` and
+    waiting through the handshake makes the bond persist.
+    """
+    import subprocess
+
+    proc = subprocess.Popen(
+        ["bluetoothctl"],
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT, text=True, bufsize=1,
+    )
+
+    def send(cmd: str) -> None:
+        try:
+            proc.stdin.write(cmd + "\n")
+            proc.stdin.flush()
+        except (BrokenPipeError, ValueError):
+            pass
+
+    send("agent NoInputNoOutput")
+    send("default-agent")
+    send(f"pair {mac}")
+    time.sleep(6)            # allow the pairing/bonding handshake to complete
+    send(f"trust {mac}")
+    if connect:
+        send(f"connect {mac}")
+        time.sleep(5)        # allow the audio profile to connect
+    send("quit")
+
+    try:
+        out, _ = proc.communicate(timeout=25)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        out, _ = proc.communicate()
+
+    ok = "Pairing successful" in out or "Connection successful" in out
+    return ok, out
+
+
 # ── Data Collection ──────────────────────────────────────────────────────────
 
 
@@ -394,12 +439,21 @@ class BluetoothApp:
             return
         self.cursor = max(0, min(self.cursor + delta, total - 1))
 
-    def _run_action(self, cmd: str, success_msg: str, fail_msg: str):
+    def _stop_scan(self):
+        """Stop scanning. Required before pair/connect: the controller cannot
+        reliably establish an A2DP connection while it is busy scanning."""
+        if self.scanning:
+            run("bluetoothctl scan off", timeout=3)
+            self.scanning = False
+
+    def _run_action(self, cmd: str, success_msg: str, fail_msg: str, stop_scan: bool = False):
         """Run a bluetoothctl command in a background thread."""
 
         def _do():
+            if stop_scan:
+                self._stop_scan()
             self.set_status(f"Working\u2026")
-            code, out = run(cmd, timeout=15)
+            code, out = run(cmd, timeout=20)
             if code == 0:
                 self.set_status(success_msg)
             else:
@@ -427,14 +481,26 @@ class BluetoothApp:
                 f"Disconnected {dev.name}",
                 f"Failed to disconnect {dev.name}",
             )
+        elif not dev.paired:
+            # Pair + connect in one agent-backed session so the bond persists.
+            def _do():
+                self._stop_scan()
+                self.set_status("Pairing & connecting…")
+                ok, _ = pair_connect(dev.mac, connect=True)
+                self.set_status(
+                    f"Connected to {dev.name}" if ok
+                    else f"Failed to connect to {dev.name}"
+                )
+                self.refresh()
+
+            threading.Thread(target=_do, daemon=True).start()
         else:
-            if not dev.paired:
-                self.set_status(f"Pairing first\u2026")
-                run(f"bluetoothctl pair {dev.mac}", timeout=15)
+            # Already paired/bonded — a plain connect is reliable.
             self._run_action(
                 f"bluetoothctl connect {dev.mac}",
                 f"Connected to {dev.name}",
                 f"Failed to connect to {dev.name}",
+                stop_scan=True,
             )
 
     def toggle_scan(self):
@@ -457,11 +523,17 @@ class BluetoothApp:
         if dev.paired:
             self.set_status(f"{dev.name} is already paired")
             return
-        self._run_action(
-            f"bluetoothctl pair {dev.mac}",
-            f"Paired with {dev.name}",
-            f"Failed to pair with {dev.name}",
-        )
+        def _do():
+            self._stop_scan()
+            self.set_status("Pairing…")
+            ok, _ = pair_connect(dev.mac, connect=False)
+            self.set_status(
+                f"Paired & trusted {dev.name}" if ok
+                else f"Failed to pair with {dev.name}"
+            )
+            self.refresh()
+
+        threading.Thread(target=_do, daemon=True).start()
 
     def trust_selected(self):
         dev = self.selected
