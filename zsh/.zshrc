@@ -141,4 +141,12 @@ cdf() {
   fi
 }
 
+# Ctrl+F → same fuzzy jump as in yazi
+cdf-widget() {
+  cdf < /dev/tty
+  zle reset-prompt
+}
+zle -N cdf-widget
+bindkey '^F' cdf-widget
+
 export PATH="$HOME/.npm-global/bin:$PATH"
