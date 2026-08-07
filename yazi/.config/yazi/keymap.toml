@@ -1,4 +1,14 @@
 [[mgr.prepend_keymap]]
+on = ["C"]
+run = '''shell --orphan '/home/marco/.local/bin/cursor -n "$PWD"' '''
+desc = "Open current folder in Cursor (new window)"
+
+[[mgr.prepend_keymap]]
+on = ["<C-o>"]
+run = '''shell --orphan 'google-chrome-canary "$0"' '''
+desc = "Open hovered file/folder in Chrome"
+
+[[mgr.prepend_keymap]]
 on = ["<C-f>"]
 run = '''
 shell --block '

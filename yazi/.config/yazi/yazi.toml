@@ -1,0 +1,87 @@
+[opener]
+# GUI editor / IDE — opens files OR folders in a NEW window, keeps running after yazi exits.
+# Absolute path required: yazi runs openers via plain `sh`, which does NOT have ~/.local/bin in PATH.
+cursor = [
+  { run = '/home/marco/.local/bin/cursor -n %s', orphan = true, desc = "Cursor", for = "unix" },
+]
+
+# Terminal editor (blocks yazi while open)
+edit = [
+  { run = 'nvim %s', block = true, desc = "nvim", for = "unix" },
+]
+
+# Images
+image = [
+  { run = 'loupe %s', orphan = true, desc = "Loupe", for = "unix" },
+]
+
+# Video
+video = [
+  { run = 'vlc %s', orphan = true, desc = "VLC", for = "unix" },
+  { run = 'totem %s', orphan = true, desc = "Totem", for = "unix" },
+]
+
+# Audio
+audio = [
+  { run = 'vlc %s', orphan = true, desc = "VLC", for = "unix" },
+]
+
+# PDF / documents
+pdf = [
+  { run = 'evince %s', orphan = true, desc = "Evince", for = "unix" },
+  { run = 'google-chrome-canary %s', orphan = true, desc = "Chrome", for = "unix" },
+]
+
+# Office documents
+office = [
+  { run = 'libreoffice %s', orphan = true, desc = "LibreOffice", for = "unix" },
+]
+
+# Browser — for html / web files
+browser = [
+  { run = 'google-chrome-canary %s', orphan = true, desc = "Chrome", for = "unix" },
+]
+
+# Fallback to the system default
+open = [
+  { run = 'xdg-open %s', desc = "Default app", for = "unix" },
+]
+
+# Reveal containing folder in the GUI file manager (%d = dirname of selection)
+reveal = [
+  { run = 'xdg-open %d', desc = "Reveal in file manager", for = "unix" },
+]
+
+
+[open]
+# `o` (and Enter) runs the FIRST opener; `O` (Shift+O) shows the "open with" menu.
+rules = [
+  # Folders → open the directory in Cursor as a project
+  { url = "*/", use = [ "cursor", "open", "reveal" ] },
+
+  # Text / code / config → Cursor first, nvim as the Shift+O alternative
+  { mime = "text/*",                              use = [ "cursor", "edit", "reveal" ] },
+  { mime = "application/json",                    use = [ "cursor", "edit", "reveal" ] },
+  { mime = "application/{ndjson,javascript}",     use = [ "cursor", "edit", "reveal" ] },
+  { mime = "application/x-shellscript",           use = [ "cursor", "edit", "reveal" ] },
+  { mime = "application/{toml,yaml,x-yaml}",      use = [ "cursor", "edit", "reveal" ] },
+  { mime = "inode/empty",                         use = [ "cursor", "edit", "reveal" ] },
+
+  # Media
+  { mime = "image/*", use = [ "image", "open", "reveal" ] },
+  { mime = "video/*", use = [ "video", "open", "reveal" ] },
+  { mime = "audio/*", use = [ "audio", "open", "reveal" ] },
+
+  # Documents
+  { mime = "application/pdf",                                  use = [ "pdf", "browser", "reveal" ] },
+  { mime = "application/vnd.oasis.opendocument.*",            use = [ "office", "open" ] },
+  { mime = "application/vnd.openxmlformats-officedocument.*", use = [ "office", "open" ] },
+  { mime = "application/msword",                              use = [ "office", "open" ] },
+  { mime = "application/vnd.ms-*",                            use = [ "office", "open" ] },
+
+  # Web
+  { mime = "text/html", use = [ "browser", "cursor", "reveal" ] },
+
+  # Fallback for everything else
+  { url = "*", use = [ "open", "cursor", "reveal" ] },
+]

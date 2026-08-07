@@ -12,7 +12,7 @@ get_overlay_icon() {
         "netmetrics-overlay")    echo "$ICON_DIR/utilities-system-monitor.svg" ;;
         "keybindings-overlay")   echo "$ICON_DIR/preferences-desktop-keyboard-shortcuts.svg" ;;
         "bluetooth-overlay")     echo "$ICON_DIR/bluetooth-active.svg" ;;
-        "jarvis-overlay")        echo "$ICON_DIR/agent.svg" ;;
+        "jarvis-overlay"|"kaya-overlay") echo "$ICON_DIR/agent.svg" ;;
         *)                       return 1 ;;
     esac
 }

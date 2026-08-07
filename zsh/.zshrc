@@ -150,3 +150,4 @@ zle -N cdf-widget
 bindkey '^F' cdf-widget
 
 export PATH="$HOME/.npm-global/bin:$PATH"
+export PATH=$PATH:/snap/bin
