@@ -1,129 +1,164 @@
-/* Kaya TUI — focused Nord-themed chat */
+/* Kaya — a console, not a dashboard.
+ *
+ * background   #080D14    raised surface  #0D1520    border  #1C2B3D
+ * text         #D9E2E8    dim             #6F8190
+ * cyan #66D9EF   blue #4D8FC8   amber #D9A75F   green #71C48D   red #D86F6F
+ */
 
 Screen {
-    background: #2E3440;
-    color: #ECEFF4;
+    background: #080D14;
+    color: #D9E2E8;
 }
 
-/* ── Top status bar ─────────────────────────────────────────── */
+/* ── System strips ──────────────────────────────────────────── */
 
 #status-bar {
     dock: top;
-    height: 3;
-    background: #3B4252;
-    color: #ECEFF4;
+    height: 2;
     padding: 0 2;
     layout: horizontal;
+    background: #080D14;
+    border-bottom: solid #1C2B3D;
 }
 
-#status-model {
-    width: 1fr;
-    color: #88C0D0;
-    text-style: bold;
-    content-align: left middle;
+#status-brand { width: auto; content-align: left middle; }
+#status-model { width: 1fr; padding: 0 4; content-align: left middle; }
+#status-context { width: auto; padding: 0 4 0 0; content-align: right middle; }
+#status-uptime { width: auto; content-align: right middle; }
+
+#footer-bar {
+    dock: bottom;
+    height: 2;
+    padding: 0 2;
+    layout: horizontal;
+    background: #080D14;
+    border-top: solid #1C2B3D;
 }
 
-#status-title {
-    width: 1fr;
-    color: #ECEFF4;
-    text-style: bold;
-    content-align: center middle;
-}
+#footer-left { width: auto; content-align: left middle; }
+#footer-center { width: 1fr; content-align: center middle; }
+#footer-right { width: auto; content-align: right middle; }
 
-#status-info {
-    width: 1fr;
-    content-align: right middle;
-    color: #4C566A;
-}
-
-/* ── Main area: orb left, transcript right ──────────────────── */
+/* ── Main area: activity | Kaya | memory ────────────────────── */
 
 #main-area {
     layout: horizontal;
     height: 1fr;
 }
 
-#orb {
-    width: 2fr;
+.side-panel {
+    width: 1fr;
     min-width: 20;
     height: 100%;
-    border: round #4C566A;
-    border-title-color: #88C0D0;
-    border-title-align: center;
-    border-title-style: bold;
+    margin: 1;
+    background: #0D1520;
+    border: round #1C2B3D;
 }
 
-#chat-scroll {
-    width: 3fr;
-    height: 100%;
-    border: round #4C566A;
-    border-title-color: #88C0D0;
-    border-title-style: bold;
+.panel-header {
+    height: 1;
+    padding: 0 2;
+    background: #0D1520;
+}
+
+.panel-title {
+    width: 1fr;
+    color: #6F8190;
+    text-style: bold;
+}
+
+.panel-hint {
+    width: auto;
+    color: #33475C;
+}
+
+.panel-count {
+    height: 1;
+    padding: 0 2;
+    color: #33475C;
+}
+
+#activity-scroll, #memory-scroll {
+    height: 1fr;
     padding: 1 2;
-    scrollbar-color: #4C566A;
-    scrollbar-color-hover: #88C0D0;
-    scrollbar-color-active: #88C0D0;
+    scrollbar-size: 1 1;
+    scrollbar-color: #1C2B3D;
+    scrollbar-color-hover: #4D8FC8;
+    scrollbar-color-active: #4D8FC8;
+    scrollbar-background: #0D1520;
 }
 
-/* ── Input bar ──────────────────────────────────────────────── */
+/* ── Centre: the wave floats on bare background ─────────────── */
+
+#center-column {
+    width: 2fr;
+    min-width: 24;
+    height: 100%;
+    layout: vertical;
+    padding: 1 2;
+}
+
+#viz {
+    width: 100%;
+    height: 1fr;
+    background: #080D14;
+}
 
 #input-bar {
-    dock: bottom;
-    height: 3;
-    background: #3B4252;
-    padding: 0 1;
+    height: 2;
     layout: horizontal;
+    padding: 0 1;
+    background: #080D14;
+    border-bottom: solid #1C2B3D;
 }
 
 #input-prompt {
-    width: 4;
-    color: #88C0D0;
+    width: 2;
+    color: #66D9EF;
     text-style: bold;
     content-align: left middle;
 }
 
 #input-field {
     width: 1fr;
-    background: #3B4252;
-    color: #ECEFF4;
+    height: 1;
+    background: #080D14;
+    color: #D9E2E8;
     border: none;
     padding: 0;
 }
 
-#input-field:focus {
-    border: none;
+#input-field:focus { border: none; }
+
+#input-field > .input--placeholder {
+    color: #33475C;
 }
 
-/* Scrollbar colors are set on the scroll containers above */
-
-/* ── Chat messages ──────────────────────────────────────────── */
-
-.user-msg {
-    color: #88C0D0;
-    margin: 0 0 1 0;
+#listening-bar {
+    display: none;
+    width: 1fr;
+    height: 1;
+    content-align: left middle;
 }
 
-.assistant-msg {
-    color: #D8DEE9;
+/* ── Memory entries ─────────────────────────────────────────── */
+
+.chat-msg {
     margin: 0 0 1 0;
 }
 
 .thinking-msg {
-    color: #4C566A;
     text-style: italic;
+    margin: 0 0 1 0;
 }
 
-/* ── Context bar ────────────────────────────────────────────── */
-
-.ctx-bar {
-    color: #4C566A;
-    height: 1;
+.section-label {
+    color: #33475C;
+    margin: 0 0 1 0;
 }
 
-.ctx-bar.warn {
-    color: #EBCB8B;
-}
+/* ── Activity ledger ────────────────────────────────────────── */
 
-.ctx-bar.danger {
-    color: #BF616A;
+.activity-event {
+    margin: 0 0 1 0;
 }

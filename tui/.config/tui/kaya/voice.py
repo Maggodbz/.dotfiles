@@ -1,4 +1,4 @@
-"""Speech synthesis (Kokoro) with a live amplitude feed for the orb.
+"""Speech synthesis (Kokoro) with a live amplitude feed for the visualiser.
 
 Kokoro runs on the CPU via ONNX Runtime on purpose: the LLM already occupies
 almost all of the GPU, so a GPU TTS model would evict it on every reply.
