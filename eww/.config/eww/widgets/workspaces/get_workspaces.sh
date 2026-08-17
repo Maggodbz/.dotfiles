@@ -80,11 +80,15 @@ get_icon() {
 # associative arrays to hold icons per workspace
 declare -A icons_per_ws
 
-# Get active workspace
-active_ws=$(hyprctl activewindow -j 2>/dev/null | jq -r '.workspace.id // empty')
-if [ -z "$active_ws" ]; then
-  active_ws=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .activeWorkspace.id')
-fi
+# Record the active workspace independently for every monitor. A single global
+# "focused workspace" makes every topbar highlight the same workspace.
+declare -A active_monitor_per_ws
+while IFS=$'\t' read -r ws monitor; do
+    active_monitor_per_ws["$ws"]="$monitor"
+done < <(
+    hyprctl monitors -j 2>/dev/null |
+    jq -r '.[] | select(.disabled == false) | [.activeWorkspace.id, .name] | @tsv'
+)
 
 # collect icons for all windows
 while read -r win; do
@@ -131,17 +135,14 @@ for ws in "${wsids[@]}"; do
         icons=""
     fi
     
-    is_active="false"
-    if [ "$ws" == "$active_ws" ]; then
-        is_active="true"
-    fi
+    active_monitor="${active_monitor_per_ws[$ws]:-}"
     
     display_name="$ws:"
     
     echo -n "{"
     echo -n "\"id\": \"$ws\","
     echo -n "\"display_name\": \"$display_name\","
-    echo -n "\"active\": $is_active,"
+    echo -n "\"active_monitor\": \"$active_monitor\","
     echo -n "\"icons\": [$icons]"
     echo -n "}"
 done

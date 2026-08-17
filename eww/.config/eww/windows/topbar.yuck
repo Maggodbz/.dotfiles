@@ -1,6 +1,6 @@
 ;; Top bar window definition
 
-(defwidget topbar []
+(defwidget topbar [monitor]
   (box
     :orientation "h"
     :class       "topbar"
@@ -10,7 +10,7 @@
 
     ;; Left: workspaces
     (box :orientation "h" :class "left"
-      (workspaces)
+      (workspaces :monitor monitor)
     )
 
     ;; Center: hyper mode
@@ -29,10 +29,10 @@
       (clock))
   ))
 
-(defwindow topbar
+(defwindow topbar [monitor]
   :geometry   (geometry :x "0px" :y "0px" :width "100%" :height "3%" :anchor "top center")
   :exclusive  true
   :namespace  "eww-topbar"
   :windowtype "dock"
   :wm-ignore  true
-  (topbar))
+  (topbar :monitor monitor))
