@@ -103,6 +103,7 @@ class Voice:
         self._kokoro = None
         self._load_lock = threading.Lock()
         self._stop = threading.Event()
+        self._muted = False
         self.enabled = True
         self.voice_name = DEFAULT_VOICE
         self.status = "not loaded"
@@ -160,11 +161,32 @@ class Voice:
     # ── speaking ─────────────────────────────────────────────────
 
     def stop(self) -> None:
+        """Stop the utterance being played right now."""
         self._stop.set()
+
+    def mute(self) -> None:
+        """Stop talking now and stay silent until unmuted.
+
+        A plain stop() is not enough to keep her quiet: speak() clears the stop
+        flag when it starts, so a reply that is still being generated would
+        begin talking anyway. The mute survives until it is lifted.
+        """
+        self._muted = True
+        self._stop.set()
+
+    def unmute(self) -> None:
+        self._muted = False
+        # Playback has already exited by now, so clear the stop the mute set
+        # rather than leaving the object in a halted state.
+        self._stop.clear()
+
+    @property
+    def _halted(self) -> bool:
+        return self._muted or self._stop.is_set()
 
     def speak(self, text: str) -> None:
         """Synthesise and play `text`. Blocking — run it in a worker thread."""
-        if not self.enabled:
+        if not self.enabled or self._muted:
             return
         chunks = split_sentences(text)
         if not chunks or not self.load():
@@ -173,11 +195,13 @@ class Voice:
         import sounddevice as sd
 
         self._stop.clear()
+        if self._muted:  # muted while we were loading
+            return
         self._set_state(True)
         stream = None
         try:
             for chunk in chunks:
-                if self._stop.is_set():
+                if self._halted:
                     break
                 samples, rate = self._kokoro.create(
                     chunk, voice=self.voice_name, speed=1.0, lang=LANG
@@ -205,7 +229,7 @@ class Voice:
 
     def _play(self, stream, samples: np.ndarray, rate: int) -> None:
         for start in range(0, samples.size, BLOCK):
-            if self._stop.is_set():
+            if self._halted:
                 return
             block = samples[start:start + BLOCK]
             self._emit_level(block, rate)

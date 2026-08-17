@@ -350,8 +350,7 @@ class KayaApp(App):
             self.conv.add_assistant(reply)
         self.call_from_thread(self._finalize_response)
 
-        # Never start speaking into an open microphone.
-        if reply and not worker.is_cancelled and not self._recording:
+        if reply and not worker.is_cancelled:
             self.voice.speak(reply)
 
     def _show_thinking(self) -> None:
@@ -380,10 +379,14 @@ class KayaApp(App):
         if self._streaming_widget:
             self._streaming_widget = None
 
-        self.query_one("#viz", Visualizer).set_state("idle")
         self._update_context_info()
         self._update_counts()
-        self._set_input_enabled(True)
+
+        # A turn finishing while the mic is open must not steal the visualiser
+        # or focus a hidden input — recording owns both until it ends.
+        if not self._recording:
+            self.query_one("#viz", Visualizer).set_state("idle")
+            self._set_input_enabled(True)
 
     # ── Voice callbacks (invoked from the audio thread) ──────────
 
@@ -394,6 +397,10 @@ class KayaApp(App):
             pass
 
     def _on_speaking(self, speaking: bool) -> None:
+        # While recording, the mic owns the visualiser. Muting playback fires
+        # this callback, which would otherwise reset it out of "listening".
+        if self._recording:
+            return
         try:
             self.query_one("#viz", Visualizer).set_state(
                 "speaking" if speaking else "idle"
@@ -456,12 +463,13 @@ class KayaApp(App):
             self.exit()
 
     def _start_recording(self) -> None:
-        # Go quiet the instant the key is pressed, or she talks into the mic.
-        # Her reply keeps generating; only the second press cancels that.
-        self.voice.stop()
         self._recording = True
         self._rec_stop.clear()
         self._rec_cancel.clear()
+        # Cut her off the instant the mic opens — otherwise she talks into it.
+        # This silences speech only; the reply itself keeps generating until
+        # the second press decides to discard it.
+        self.voice.mute()
 
         self.query_one("#input-prompt", Static).display = False
         self.query_one("#input-field", Input).display = False
@@ -546,6 +554,7 @@ class KayaApp(App):
         self.query_one("#listening-bar", Static).update("[#66D9EF]◌ transcribing…[/]")
 
     def _end_recording_ui(self) -> None:
+        self.voice.unmute()
         if self._pulse_timer is not None:
             self._pulse_timer.stop()
             self._pulse_timer = None
