@@ -50,7 +50,7 @@ while IFS=$'\t' read -r ws monitor; do
     active_monitor_per_ws["$ws"]="$monitor"
 done < <(
     hyprctl monitors -j 2>/dev/null |
-    jq -r '.[] | select(.disabled == false) | [.activeWorkspace.id, .name] | @tsv'
+    jq -r '.[] | select(.disabled != true) | [.activeWorkspace.id, .name] | @tsv'
 )
 
 # collect icons for all windows

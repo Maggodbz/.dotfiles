@@ -19,9 +19,24 @@ if [ -f "$LOG" ] && [ "$(wc -c <"$LOG" 2>/dev/null || echo 0)" -gt 1000000 ]; th
 fi
 log() { printf '%s %s\n' "$(date -Is)" "$*" >>"$LOG"; }
 
+# Only an explicit `true` counts as off: `hyprctl monitors` lists active outputs
+# anyway, and matching on == false turns any schema change into "zero monitors",
+# which silently leaves the screen with no bar at all.
 enabled_monitors() {
     hyprctl monitors -j 2>/dev/null \
-        | jq -r '.[] | select(.disabled == false) | .name' 2>/dev/null
+        | jq -r '.[] | select(.disabled != true) | .name' 2>/dev/null
+}
+
+# Whatever the reason hyprctl gave us nothing - not on PATH, IPC unreachable,
+# output we cannot parse - a bar on the focused output beats no bar. It loses
+# only the per-monitor workspace highlight, which needs a name to compare.
+open_fallback_bar() {
+    ensure_daemon || { log "eww daemon unreachable"; return 1; }
+    if eww active-windows 2>/dev/null | cut -d: -f1 | grep -qx topbar-fallback; then
+        return 0
+    fi
+    log "opening unscoped fallback bar"
+    eww open topbar --id topbar-fallback --arg "monitor=" || log "!! fallback bar failed"
 }
 
 monitor_has_bar() { # $1 = monitor name
@@ -48,7 +63,13 @@ for _ in $(seq 1 50); do
     sleep 0.2
     mapfile -t MONITORS < <(enabled_monitors)
 done
-((${#MONITORS[@]})) || { log "no enabled monitors"; exit 1; }
+if ((${#MONITORS[@]} == 0)); then
+    # Log what hyprctl actually said; discarding it is why this looked like
+    # "no monitors found" rather than a named failure.
+    log "no monitors from hyprctl: $(hyprctl monitors -j 2>&1 | head -c 300)"
+    open_fallback_bar
+    exit 0
+fi
 
 ensure_daemon || { log "eww daemon unreachable"; exit 1; }
 
