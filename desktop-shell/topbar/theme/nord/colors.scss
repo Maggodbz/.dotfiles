@@ -1,0 +1,72 @@
+// Nord theme: the single source of truth for the bar's colours, typography and
+// shape. Widgets must never hardcode a colour; add a variable here instead.
+// Icons live next door in icons.sh, because they are yuck widget attributes and
+// shell script values rather than CSS.
+//
+// The bar reads near-black rather than Nord's polar night: every module is an
+// inset pill, darker than the bar, outlined by a hairline. Nord's frost and
+// aurora hues are kept for the parts that carry meaning (hover, battery level),
+// so colour only ever appears when it says something.
+//
+// ASCII only, see the note at the top of eww.scss.
+
+/// Typography
+$font-family: "JetBrainsMono Nerd Font";
+$font-size-small: 10px;   // indicator labels (battery, clock, volume, ...)
+$font-size-normal: 11px;  // bar default
+$font-size-large: 12px;   // hyper-mode badge
+
+/// Palette
+$fg-primary: #ECEFF4;
+$fg-muted: rgba(236, 239, 244, 0.55);
+$accent-color: #88C0D0;
+$warning-color: #EBCB8B;
+$error-color: #BF616A;
+$success-color: #A3BE8C;
+
+/// Surfaces. The pills are *darker* than the bar and lifted by a hairline
+/// border; a lighter fill is reserved for "this one is active". Related pills
+/// are grouped inside a cluster that carries the same treatment one step
+/// fainter, so the bar reads as two or three objects rather than eight.
+$topbar-bg: transparent;
+$widget-bg: rgba(0, 0, 0, 0.35);
+$widget-border: rgba(236, 239, 244, 0.07);
+$widget-active-bg: rgba(236, 239, 244, 0.13);
+$cluster-bg: rgba(236, 239, 244, 0.03);
+$cluster-border: rgba(236, 239, 244, 0.05);
+
+/// Focus, on the bar and on the compositor, is a white edge plus a soft white
+/// glow. Never a hue: see col.active_border in hyprland.conf, which this
+/// deliberately mirrors so "selected" looks the same everywhere.
+$glow-border: rgba(255, 255, 255, 0.85);
+$glow-shadow: 0 0 8px rgba(255, 255, 255, 0.22);
+
+/// Shape and spacing
+$margin-small: 2px;
+$radius: 999px;         // capsules: GTK clamps this to half the height
+$widget-padding: 3px 12px;
+$widget-height: 26px;
+$cluster-padding: 4px 6px;
+
+/// Workspaces. The active workspace is tinted rather than accent-filled so the
+/// app icons inside it stay legible.
+$workspace-active-bg: $widget-active-bg;
+$workspace-radius: $radius;
+$workspace-padding: 3px 10px;
+
+/// Hyper mode badge: an outlined capsule in both states, so toggling the mode
+/// brightens the outline instead of repainting a block of colour. Hyper is
+/// "armed", which is the same idea as focused, so it wears the same white glow
+/// as hover and the active workspace rather than a colour of its own.
+$mode-badge-width: 240px;
+$hyper-border: $glow-border;
+$hyper-shadow: $glow-shadow;
+$hyper-fg: $fg-primary;
+$normal-border: $widget-border;
+$normal-fg: $fg-muted;
+$overlay-icon-opacity: 0.85;
+
+/// Battery levels. battery.sh reports a level name, this maps it to a colour.
+$battery-charging-color: $success-color;
+$battery-critical-color: $error-color;
+$battery-low-color: $warning-color;

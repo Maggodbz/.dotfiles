@@ -1,0 +1,12 @@
+;; Battery -- battery.sh asks the theme for the icon and reports a level
+;; ("charging", "critical", "low", "normal"); the colour per level is in the theme.
+(defpoll BATTERY :interval "10s"
+  "~/.config/eww/widgets/battery/battery.sh")
+
+(defwidget battery []
+  (button :class "battery" :tooltip {BATTERY.tooltip}
+    (box :spacing 2
+      (image :path {BATTERY.icon}
+             :image-width {ICONS.icon_size}
+             :image-height {ICONS.icon_size})
+      (label :text {BATTERY.percentage} :class "battery-${BATTERY.level}"))))

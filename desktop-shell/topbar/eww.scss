@@ -1,0 +1,129 @@
+// Keep this file (and the theme's colors.scss) ASCII-only: a non-ASCII byte makes the
+// SCSS compiler prepend `@charset "UTF-8";`, which GTK's CSS parser rejects
+// and the whole stylesheet is then dropped.
+
+@import "./theme/current/colors.scss";
+
+// Every module on the bar is the same capsule: inset (darker than the bar),
+// lifted by a hairline border, accent border on hover.
+@mixin capsule($min-width: 0px, $min-height: $widget-height) {
+  all: unset;
+  border-radius: $radius;
+  padding: $widget-padding;
+  background-color: $widget-bg;
+  border: 1px solid $widget-border;
+  min-width: $min-width;
+  min-height: $min-height;
+
+  &:hover {
+    border: 1px solid $glow-border;
+    box-shadow: $glow-shadow;
+  }
+}
+
+@mixin capsule-label {
+  font-size: $font-size-small;
+  font-weight: bold;
+  color: $fg-primary;
+}
+
+
+/// Bar
+
+.topbar {
+  background-color: $topbar-bg;
+  font-family: $font-family;
+}
+
+.topbar label {
+  font-size: $font-size-normal;
+  margin: $margin-small;
+  color: $fg-primary;
+}
+
+.left, .center, .right {
+  background-color: transparent;
+}
+
+.left  { margin-left: 10px; }
+.right { margin-right: 10px; }
+
+// Groups related capsules into one object. Same treatment as a capsule but one
+// step fainter, so it reads as a tray behind them rather than a pill itself.
+.cluster {
+  background-color: $cluster-bg;
+  border: 1px solid $cluster-border;
+  border-radius: $radius;
+  padding: $cluster-padding;
+}
+
+image {
+  color: $fg-primary;
+}
+
+
+/// Workspaces. Every workspace is a capsule; the active one is filled rather
+/// than outlined, which is the only fill on the bar.
+
+.workspace, .workspace-active {
+  @include capsule($min-height: 0px);
+  padding: $workspace-padding;
+
+  label { @include capsule-label; }
+}
+
+.workspace-active {
+  background-color: $workspace-active-bg;
+  border: 1px solid $glow-border;
+  box-shadow: $glow-shadow;
+}
+
+
+/// Hyper mode badge
+
+.hyper, .normal {
+  // Wide enough to stay a landmark at the centre of the bar even when the mode
+  // name is short; :halign "center" stops it stretching to the whole third.
+  @include capsule($mode-badge-width, $widget-height);
+  background-color: transparent;
+
+  label {
+    @include capsule-label;
+    font-size: $font-size-large;
+  }
+}
+
+.hyper {
+  border: 1px solid $hyper-border;
+  box-shadow: $hyper-shadow;
+
+  label { color: $hyper-fg; }
+}
+
+.normal {
+  border: 1px solid $normal-border;
+
+  label { color: $normal-fg; }
+}
+
+.overlay-icon {
+  opacity: $overlay-icon-opacity;
+  margin-left: 2px;
+}
+
+
+/// Indicators
+
+.volume, .clock, .backlight, .battery {
+  @include capsule();
+
+  label { @include capsule-label; }
+}
+
+.battery {
+  // battery.sh reports the level; the colour belongs to the theme. The names
+  // are prefixed so they cannot collide with the .normal hyper-mode badge.
+  label.battery-charging { color: $battery-charging-color; }
+  label.battery-critical { color: $battery-critical-color; }
+  label.battery-low      { color: $battery-low-color; }
+}

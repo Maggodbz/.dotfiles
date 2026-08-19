@@ -1,0 +1,15 @@
+;; Volume
+(defpoll VOL :interval "1s"
+  "pactl get-sink-volume @DEFAULT_SINK@ | awk 'NR==1 {print \$5}'")
+
+;; Emits a full path: the script asks the active theme for it.
+(defpoll VOLUME_ICON :interval "1s"
+  "~/.config/eww/widgets/volume/get-volume-icon.sh")
+
+(defwidget volume []
+  (button :class "volume" :onclick "~/.config/eww/widgets/volume/toggle-mute.sh"
+    (box :spacing 2
+      (image :path VOLUME_ICON
+             :image-width {ICONS.icon_size}
+             :image-height {ICONS.icon_size})
+      (label :text "${VOL}"))))

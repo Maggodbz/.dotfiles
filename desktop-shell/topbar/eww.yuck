@@ -1,0 +1,18 @@
+;; Main eww configuration file.
+;;
+;; ICONS mirrors theme/current/icons.sh, which is also sourced by the shell
+;; widgets. One file per theme feeds both languages, so swapping the
+;; theme/current symlink changes every icon at once.
+
+(defpoll ICONS :interval "1h" "./theme/current/icons.sh --json")
+
+;; Import all widget modules
+(include "widgets/workspaces/workspaces.yuck")
+(include "widgets/hyper/hyper.yuck")
+(include "widgets/clock/clock.yuck")
+(include "widgets/volume/volume.yuck")
+(include "widgets/backlight/backlight.yuck")
+(include "widgets/battery/battery.yuck")
+
+;; Import all window definitions
+(include "windows/topbar.yuck")

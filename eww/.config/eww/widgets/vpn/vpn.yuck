@@ -1,9 +1,0 @@
-;; VPN
-(defpoll VPN_ICON :interval "5s"
-  "~/.config/eww/widgets/vpn/enliteai-vpn-status.sh")
-
-(defwidget vpn []
-  (button :class "vpn" :onclick "echo 'VPN clicked'"
-    (image :path "/usr/share/icons/breeze-dark/status/24/${VPN_ICON}.svg" 
-           :image-width 28 
-           :image-height 28))) 

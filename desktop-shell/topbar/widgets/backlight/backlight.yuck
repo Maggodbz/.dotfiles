@@ -1,0 +1,11 @@
+;; Backlight
+(defpoll BRT :interval "1s"
+  "brightnessctl info | grep -oE '\\([0-9]+%\\)' | tr -d '()'")
+
+(defwidget backlight []
+  (button :class "backlight"
+    (box :spacing 2
+      (image :path {ICONS.brightness}
+             :image-width {ICONS.icon_size}
+             :image-height {ICONS.icon_size})
+      (label :text "${BRT}"))))

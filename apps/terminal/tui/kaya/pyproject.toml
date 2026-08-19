@@ -1,0 +1,25 @@
+[project]
+name = "kaya"
+version = "0.1.0"
+description = "Kaya local-LLM console. The smaller Rich TUIs carry their own PEP 723 deps."
+requires-python = ">=3.11"
+
+# Core: text chat and the Textual UI. Kept light so a fresh machine is usable
+# immediately; the local LLM itself runs in Ollama, not here.
+dependencies = [
+    "textual>=0.60",
+    "rich>=13.7",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+# Speech in/out for Kaya. Heavier (onnxruntime, model downloads). Kaya degrades
+# gracefully without these — text chat still works.
+voice = [
+    "sounddevice>=0.4.6",
+    "faster-whisper>=1.0",
+    "kokoro-onnx>=0.4",
+]
+
+# This is a plain dependency manifest, not a packaged library — nothing here is
+# built or imported as a wheel. `setup-env.sh` installs these into a venv.

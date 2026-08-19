@@ -1,0 +1,23 @@
+;; Workspaces with icons
+(defpoll workspaces_json :interval "100ms"
+  "./widgets/workspaces/get_workspaces.sh")
+
+(defwidget workspace-entry [workspace monitor]
+  (box :class "workspace${workspace.active_monitor == monitor ? '-active' : ''}"
+       :space-evenly false
+       :spacing 4
+    (label :text {workspace.display_name} :halign "start")
+    (for icon in {workspace.icons}
+      (image :path icon
+             :image-width {ICONS.workspace_icon_size}
+             :image-height {ICONS.workspace_icon_size}))))
+
+(defwidget workspaces [monitor]
+  (box :orientation "h"
+       :class "workspaces-container cluster"
+       :halign "start"
+       :valign "center"
+       :spacing 6
+       :space-evenly false
+    (for workspace in {workspaces_json.workspaces}
+      (workspace-entry :workspace workspace :monitor monitor))))

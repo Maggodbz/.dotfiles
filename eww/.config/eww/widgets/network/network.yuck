@@ -1,9 +1,0 @@
-;; Network
-(defpoll NETWORK :interval "5s"
-  "~/.config/eww/widgets/network/get-network-icon.sh")
-
-(defwidget network []
-  (button :class "network" :onclick "echo 'Network clicked'" :tooltip {NETWORK.tooltip}
-    (image :path "/usr/share/icons/breeze-dark/status/24/${NETWORK.icon}.svg"
-           :image-width 28
-           :image-height 28))) 

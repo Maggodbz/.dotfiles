@@ -1,0 +1,78 @@
+[opener]
+# Terminal editor (blocks yazi while open)
+edit = [
+  { run = 'nvim %s', block = true, desc = "nvim", for = "unix" },
+]
+
+# Images
+image = [
+  { run = 'loupe %s', orphan = true, desc = "Loupe", for = "unix" },
+]
+
+# Video
+video = [
+  { run = 'vlc %s', orphan = true, desc = "VLC", for = "unix" },
+  { run = 'totem %s', orphan = true, desc = "Totem", for = "unix" },
+]
+
+# Audio
+audio = [
+  { run = 'vlc %s', orphan = true, desc = "VLC", for = "unix" },
+]
+
+# PDF / documents
+pdf = [
+  { run = 'evince %s', orphan = true, desc = "Evince", for = "unix" },
+  { run = '"${BROWSER:-xdg-open}" %s', orphan = true, desc = "Browser", for = "unix" },
+]
+
+# Office documents
+office = [
+  { run = 'libreoffice %s', orphan = true, desc = "LibreOffice", for = "unix" },
+]
+
+# Browser — for html / web files (honours $BROWSER, else the system default)
+browser = [
+  { run = '"${BROWSER:-xdg-open}" %s', orphan = true, desc = "Browser", for = "unix" },
+]
+
+# Fallback to the system default
+open = [
+  { run = 'xdg-open %s', desc = "Default app", for = "unix" },
+]
+
+# Reveal containing folder in the GUI file manager (%d = dirname of selection)
+reveal = [
+  { run = 'xdg-open %d', desc = "Reveal in file manager", for = "unix" },
+]
+
+
+[open]
+# `o` (and Enter) runs the FIRST opener; `O` (Shift+O) shows the "open with" menu.
+rules = [
+  { url = "*/", use = [ "open", "reveal" ] },
+
+  { mime = "text/*",                              use = [ "edit", "reveal" ] },
+  { mime = "application/json",                    use = [ "edit", "reveal" ] },
+  { mime = "application/{ndjson,javascript}",     use = [ "edit", "reveal" ] },
+  { mime = "application/x-shellscript",           use = [ "edit", "reveal" ] },
+  { mime = "application/{toml,yaml,x-yaml}",      use = [ "edit", "reveal" ] },
+  { mime = "inode/empty",                         use = [ "edit", "reveal" ] },
+
+  # Media
+  { mime = "image/*", use = [ "image", "open", "reveal" ] },
+  { mime = "video/*", use = [ "video", "open", "reveal" ] },
+  { mime = "audio/*", use = [ "audio", "open", "reveal" ] },
+
+  # Documents
+  { mime = "application/pdf",                                  use = [ "pdf", "browser", "reveal" ] },
+  { mime = "application/vnd.oasis.opendocument.*",            use = [ "office", "open" ] },
+  { mime = "application/vnd.openxmlformats-officedocument.*", use = [ "office", "open" ] },
+  { mime = "application/msword",                              use = [ "office", "open" ] },
+  { mime = "application/vnd.ms-*",                            use = [ "office", "open" ] },
+
+  # Web
+  { mime = "text/html", use = [ "browser", "edit", "reveal" ] },
+
+  { url = "*", use = [ "open", "reveal" ] },
+]

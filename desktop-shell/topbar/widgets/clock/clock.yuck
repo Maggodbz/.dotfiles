@@ -1,0 +1,11 @@
+;; Clock
+(defpoll TIME :interval "1s" "date +\"%H:%M\"")
+(defpoll TIME_TT :interval "1s" "~/.config/eww/widgets/clock/get-clock-tooltip.sh")
+
+(defwidget clock []
+  (button :class "clock" :tooltip {TIME_TT}
+    (box :spacing 2
+      (image :path {ICONS.clock}
+             :image-width {ICONS.icon_size}
+             :image-height {ICONS.icon_size})
+      (label :text "${TIME}"))))
