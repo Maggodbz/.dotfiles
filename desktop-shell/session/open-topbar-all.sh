@@ -39,6 +39,21 @@ open_fallback_bar() {
     eww open topbar --id topbar-fallback --arg "monitor=" || log "!! fallback bar failed"
 }
 
+# place_bar <window-id> <monitor-name> <index>
+#
+# eww resolves --screen through GDK, which does not have to agree with Hyprland
+# about what an output is called: the same panel is "eDP-1" to Hyprland and
+# "MND508ZB1-1" (its model) to GDK, and then every open fails. The index is the
+# one identifier both sides share, so it is the fallback. The name is still
+# tried first because it survives a monitor being added or removed mid-session,
+# where positions shift underneath us.
+place_bar() {
+    local id=$1 name=$2 index=$3
+    eww open topbar --screen "$name" --id "$id" --arg "monitor=$name" 2>>"$LOG" && return 0
+    log "name '$name' rejected by eww, retrying as index $index"
+    eww open topbar --screen "$index" --id "$id" --arg "monitor=$name" 2>>"$LOG"
+}
+
 monitor_has_bar() { # $1 = monitor name
     hyprctl layers -j 2>/dev/null | jq -e --arg m "$1" \
         '.[$m].levels | to_entries[].value[]? | select(.namespace == "eww-topbar")' \
@@ -73,9 +88,9 @@ fi
 
 ensure_daemon || { log "eww daemon unreachable"; exit 1; }
 
-# Bars are keyed by monitor NAME (topbar-<name>), and eww's --screen accepts a
-# name, so a bar stays tied to the right output no matter what order Hyprland
-# enumerates them in.
+# Bars are keyed by monitor NAME (topbar-<name>) so a bar stays tied to the
+# right output no matter what order Hyprland enumerates them in. Which output
+# eww *puts* it on is a separate problem: see place_bar.
 declare -A want=()
 for m in "${MONITORS[@]}"; do want["topbar-$m"]="$m"; done
 
@@ -95,7 +110,9 @@ for id in "${!open_ids[@]}"; do
 done
 
 changed=0
+idx=-1
 for m in "${MONITORS[@]}"; do
+    idx=$((idx + 1))
     id="topbar-$m"
     monitor_has_bar "$m" && continue
     # No live layer on this output. If eww still thinks a window with this id is
@@ -104,9 +121,8 @@ for m in "${MONITORS[@]}"; do
         eww close "$id" >/dev/null 2>&1
         sleep 0.1
     fi
-    log "open $id on $m"
-    eww open topbar --screen "$m" --id "$id" --arg "monitor=$m" \
-        || log "!! failed to open $id"
+    log "open $id on $m (index $idx)"
+    place_bar "$id" "$m" "$idx" || log "!! failed to open $id"
     changed=1
 done
 
