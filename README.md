@@ -47,7 +47,7 @@ If you'd rather do it by hand, or you're not on Fedora:
 
 1. **Packages** — install the equivalents of:
    `git stow zsh tmux neovim jq fd-find fzf bat ripgrep wl-clipboard
-   brightnessctl playerctl bluez NetworkManager wireless-tools nmap-ncat bc
+   brightnessctl playerctl bluez NetworkManager nmap-ncat bc
    socat pipewire wireplumber pipewire-pulseaudio xdg-utils wofi wlogout`,
    `uv`, a JetBrainsMono Nerd Font, and the `Numix-Circle` + `breeze` icon
    themes. The Hyprland stack is spread over COPRs — `cesusieh/Hyprland` on

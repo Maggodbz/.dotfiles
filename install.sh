@@ -15,7 +15,7 @@ DNF_PACKAGES=(
     git stow zsh tmux neovim curl unzip           # base
     jq fd-find fzf bat ripgrep socat bc           # cli tools the configs call
     wl-clipboard brightnessctl playerctl xdg-utils
-    bluez NetworkManager wireless-tools nmap-ncat # bluetooth / netmetrics widgets
+    bluez NetworkManager nmap-ncat                # bluetooth / netmetrics widgets
     pipewire wireplumber pipewire-pulseaudio      # wpctl + pactl
     numix-icon-theme-circle breeze-icon-theme     # topbar icons
     wofi wlogout                                  # launcher + logout menu
@@ -39,6 +39,17 @@ hyprland_copr() {
         echo cesusieh/Hyprland
     else
         echo solopasha/hyprland
+    fi
+}
+
+# The other one. An earlier run may have enabled a COPR that has no build for
+# this release; dnf keeps it enabled after the failed install, and its dead
+# metadata then aborts every later transaction on its own.
+stale_hyprland_copr() {
+    if [ "$(rpm -E %fedora)" -ge 44 ]; then
+        echo solopasha/hyprland
+    else
+        echo cesusieh/Hyprland
     fi
 }
 
@@ -119,6 +130,12 @@ install_packages() {
     sudo dnf install -y "${DNF_PACKAGES[@]}"
 
     step "Installing the Hyprland stack"
+    local stale
+    stale=$(stale_hyprland_copr)
+    if dnf copr list 2>/dev/null | grep -qi "/${stale}$"; then
+        sudo dnf copr disable -y "$stale"
+    fi
+
     local repo
     for repo in "${COPR_REPOS[@]}" "$(hyprland_copr)"; do
         sudo dnf copr enable -y "$repo"
