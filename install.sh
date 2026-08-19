@@ -18,11 +18,23 @@ DNF_PACKAGES=(
     bluez NetworkManager wireless-tools nmap-ncat # bluetooth / netmetrics widgets
     pipewire wireplumber pipewire-pulseaudio      # wpctl + pactl
     numix-icon-theme-circle breeze-icon-theme     # topbar icons
+    wofi wlogout                                  # launcher + logout menu
 )
 
-# The Hyprland world is not in Fedora proper.
-COPR_REPO=solopasha/hyprland
-COPR_PACKAGES=(hyprland hyprpaper hyprshot eww wofi wlogout wezterm yazi)
+# The Hyprland world is not in Fedora proper, and no single COPR carries all of
+# it. dnf resolves against every enabled repo, so the packages install in one
+# transaction once all three repos are on.
+COPR_REPOS=(
+    solopasha/hyprland   # hyprland, hyprpaper, hyprshot
+    varlad/eww           # eww - the top bar
+    lihaohong/yazi       # yazi
+)
+COPR_PACKAGES=(hyprland hyprpaper hyprshot eww yazi)
+
+# WezTerm is in neither Fedora nor a COPR. Upstream publishes a per-Fedora rpm,
+# but the newest stable only built as far as fedora39 - that build is what runs
+# here on 42, so it is pinned rather than derived from $releasever.
+WEZTERM_RPM=https://github.com/wez/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203_110809_5046fc22-1.fedora39.x86_64.rpm
 
 FONT_NAME="JetBrainsMono Nerd Font"
 FONT_URL=https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
@@ -95,9 +107,19 @@ install_packages() {
     step "Installing Fedora packages"
     sudo dnf install -y "${DNF_PACKAGES[@]}"
 
-    step "Installing the Hyprland stack from $COPR_REPO"
-    sudo dnf copr enable -y "$COPR_REPO"
+    step "Installing the Hyprland stack"
+    local repo
+    for repo in "${COPR_REPOS[@]}"; do
+        sudo dnf copr enable -y "$repo"
+    done
     sudo dnf install -y "${COPR_PACKAGES[@]}"
+}
+
+install_wezterm() {
+    rpm -q wezterm >/dev/null 2>&1 && return
+
+    step "Installing wezterm from its upstream release"
+    sudo dnf install -y "$WEZTERM_RPM"
 }
 
 install_uv() {
@@ -140,6 +162,7 @@ main() {
     case "${1:-all}" in
         all)
             install_packages
+            install_wezterm
             install_uv
             install_font
             link_configs

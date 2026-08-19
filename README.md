@@ -42,10 +42,12 @@ If you'd rather do it by hand, or you're not on Fedora:
 1. **Packages** — install the equivalents of:
    `git stow zsh tmux neovim jq fd-find fzf bat ripgrep wl-clipboard
    brightnessctl playerctl bluez NetworkManager wireless-tools nmap-ncat bc
-   socat pipewire wireplumber pipewire-pulseaudio xdg-utils`,
-   the Hyprland stack (`hyprland hyprpaper hyprshot eww wofi wlogout`),
-   `wezterm`, `yazi`, `uv`, a JetBrainsMono Nerd Font, and the
-   `Numix-Circle` + `breeze` icon themes.
+   socat pipewire wireplumber pipewire-pulseaudio xdg-utils wofi wlogout`,
+   `uv`, a JetBrainsMono Nerd Font, and the `Numix-Circle` + `breeze` icon
+   themes. The Hyprland stack is spread over three COPRs — `solopasha/hyprland`
+   (`hyprland hyprpaper hyprshot`), `varlad/eww` (`eww`), and `lihaohong/yazi`
+   (`yazi`). `wezterm` is in neither Fedora nor a COPR: install its rpm from
+   [the upstream release](https://github.com/wez/wezterm/releases).
 2. **Symlink** — `./install.sh stow` (`window-manager/hypr` → `~/.config/hypr`;
    `desktop-shell/` for topbar, wallpaper, overlays; apps from `apps/`).
 3. **Kaya env** — `~/.config/kaya/setup-env.sh` (add `--voice` for speech).
