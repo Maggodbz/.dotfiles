@@ -17,12 +17,18 @@ On a **fresh Fedora** laptop, one line:
 git clone <this-repo> ~/.dotfiles && cd ~/.dotfiles && ./install.sh
 ```
 
-That installs packages (dnf + the `solopasha/hyprland` COPR), uv, the
-JetBrainsMono Nerd Font, symlinks everything with stow, and builds the Kaya
-Python env (with the voice extras). Re-runnable. To only re-link the configs:
-`./install.sh stow`.
+That installs packages, uv, the JetBrainsMono Nerd Font, symlinks everything
+with stow, and builds the Kaya Python env (with the voice extras). Re-runnable.
+To only re-link the configs: `./install.sh stow`.
 
-Then pick **Hyprland** at the login screen. The top bar starts itself.
+Fedora 44 does not ship the Hyprland compositor. The installer enables
+`cesusieh/Hyprland` on F44 (`hyprland hyprpaper hyprshot hyprland-guiutils`)
+and `solopasha/hyprland` on older releases, plus `varlad/eww` and
+`lihaohong/yazi`. Configs target Hyprland **0.56** (window-rule rewrite from
+0.53, hyprpaper 0.8 wallpaper blocks).
+
+Then pick **Hyprland** (or **start-hyprland**, if the greeter lists it) at the
+login screen. The top bar starts itself.
 
 `./install.sh` does **not** install these — they are separate programs, not
 dotfiles:
@@ -44,8 +50,9 @@ If you'd rather do it by hand, or you're not on Fedora:
    brightnessctl playerctl bluez NetworkManager wireless-tools nmap-ncat bc
    socat pipewire wireplumber pipewire-pulseaudio xdg-utils wofi wlogout`,
    `uv`, a JetBrainsMono Nerd Font, and the `Numix-Circle` + `breeze` icon
-   themes. The Hyprland stack is spread over three COPRs — `solopasha/hyprland`
-   (`hyprland hyprpaper hyprshot`), `varlad/eww` (`eww`), and `lihaohong/yazi`
+   themes. The Hyprland stack is spread over COPRs — `cesusieh/Hyprland` on
+   Fedora 44 (`hyprland hyprpaper hyprshot hyprland-guiutils`; older Fedora
+   uses `solopasha/hyprland`), `varlad/eww` (`eww`), and `lihaohong/yazi`
    (`yazi`). `wezterm` is in neither Fedora nor a COPR: install its rpm from
    [the upstream release](https://github.com/wez/wezterm/releases).
 2. **Symlink** — `./install.sh stow` (`window-manager/hypr` → `~/.config/hypr`;

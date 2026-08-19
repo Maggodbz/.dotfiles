@@ -21,15 +21,26 @@ DNF_PACKAGES=(
     wofi wlogout                                  # launcher + logout menu
 )
 
-# The Hyprland world is not in Fedora proper, and no single COPR carries all of
-# it. dnf resolves against every enabled repo, so the packages install in one
-# transaction once all three repos are on.
+# The Hyprland world is not in Fedora proper (not even the compositor - F44
+# ships every hypr* library but not hyprland itself), and no single COPR carries
+# all of it. dnf resolves against every enabled repo, so the packages install in
+# one transaction once the repos are on.
 COPR_REPOS=(
-    solopasha/hyprland   # hyprland, hyprpaper, hyprshot
     varlad/eww           # eww - the top bar
     lihaohong/yazi       # yazi
 )
 COPR_PACKAGES=(hyprland hyprpaper hyprshot eww yazi)
+
+# The compositor itself has no single COPR that spans releases: solopasha
+# dropped every non-rawhide chroot, so it works on 42 but 404s on 44. Pick by
+# release rather than hardcoding, or the install dies with an unmatched package.
+hyprland_copr() {
+    if [ "$(rpm -E %fedora)" -ge 44 ]; then
+        echo cesusieh/Hyprland
+    else
+        echo solopasha/hyprland
+    fi
+}
 
 # WezTerm is in neither Fedora nor a COPR. Upstream publishes a per-Fedora rpm,
 # but the newest stable only built as far as fedora39 - that build is what runs
@@ -109,10 +120,13 @@ install_packages() {
 
     step "Installing the Hyprland stack"
     local repo
-    for repo in "${COPR_REPOS[@]}"; do
+    for repo in "${COPR_REPOS[@]}" "$(hyprland_copr)"; do
         sudo dnf copr enable -y "$repo"
     done
-    sudo dnf install -y "${COPR_PACKAGES[@]}"
+    # 0.56's start-hyprland wants hyprland-guiutils; solopasha (F42) never shipped it.
+    local extra=()
+    [ "$(rpm -E %fedora)" -ge 44 ] && extra+=(hyprland-guiutils)
+    sudo dnf install -y "${COPR_PACKAGES[@]}" "${extra[@]}"
 }
 
 install_wezterm() {
