@@ -1,6 +1,9 @@
 local wezterm = require 'wezterm'
 
 return {
+  -- Login shell is still bash on a fresh Fedora; terminals should be zsh.
+  default_prog = { '/usr/bin/zsh', '-l' },
+
   -- UI settings (optional tweaks)
   enable_wayland = false,
   enable_tab_bar = true,

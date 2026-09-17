@@ -19,6 +19,7 @@ DNF_PACKAGES=(
     pipewire wireplumber pipewire-pulseaudio      # wpctl + pactl
     numix-icon-theme-circle breeze-icon-theme     # topbar icons
     wofi wlogout                                  # launcher + logout menu
+    gnome-keyring libsecret                       # Cursor/Electron OS keyring on Hyprland
 )
 
 # The Hyprland world is not in Fedora proper (not even the compositor - F44
@@ -29,7 +30,7 @@ COPR_REPOS=(
     varlad/eww           # eww - the top bar
     lihaohong/yazi       # yazi
 )
-COPR_PACKAGES=(hyprland hyprpaper hyprshot eww yazi)
+COPR_PACKAGES=(hyprland hyprpaper hyprshot hyprlock hypridle eww yazi)
 
 # The compositor itself has no single COPR that spans releases: solopasha
 # dropped every non-rawhide chroot, so it works on 42 but 404s on 44. Pick by
@@ -99,6 +100,7 @@ link_desktop_shell() {
     stow_to ~/.config/eww           desktop-shell topbar
     stow_to ~/.config/hyprpaper     desktop-shell hyprpaper
     stow_to ~/.config/desktop-shell desktop-shell session
+    stow_to ~/.config/wireplumber   desktop-shell wireplumber
 }
 
 link_apps() {
@@ -160,6 +162,22 @@ install_uv() {
     curl -LsSf https://astral.sh/uv/install.sh | sh
 }
 
+install_oh_my_zsh() {
+    local omz="$HOME/.oh-my-zsh"
+    local custom="$omz/custom/plugins"
+
+    if [ ! -d "$omz" ]; then
+        step "Installing Oh My Zsh"
+        git clone --depth=1 https://github.com/ohmyzsh/ohmyzsh.git "$omz"
+    fi
+
+    mkdir -p "$custom"
+    [ -d "$custom/zsh-autosuggestions" ] \
+        || git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "$custom/zsh-autosuggestions"
+    [ -d "$custom/zsh-syntax-highlighting" ] \
+        || git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting "$custom/zsh-syntax-highlighting"
+}
+
 install_font() {
     fc-list | grep -q "$FONT_NAME" && return
 
@@ -196,6 +214,7 @@ main() {
             install_wezterm
             install_uv
             install_font
+            install_oh_my_zsh
             link_configs
             setup_kaya_env
             print_next_steps
