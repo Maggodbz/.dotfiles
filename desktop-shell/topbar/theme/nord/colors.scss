@@ -54,14 +54,25 @@ $workspace-active-bg: $widget-active-bg;
 $workspace-radius: $radius;
 $workspace-padding: 3px 10px;
 
-/// Hyper mode badge: an outlined capsule in both states, so toggling the mode
-/// brightens the outline instead of repainting a block of colour. Hyper is
-/// "armed", which is the same idea as focused, so it wears the same white glow
-/// as hover and the active workspace rather than a colour of its own.
+/// Hyper mode badge: outlined capsule in both states. Normal stays muted like
+/// every other idle pill. Hyper is the one place a hue may mean "armed", so it
+/// cannot be mistaken for focus (white) or hover.
+///
+/// Retheme the armed glow by changing only $hyper-accent-{r,g,b}. Borders,
+/// shadows, and the bar wash are derived from those channels. $hyper-fg is the
+/// label colour on the badge (keep light so it stays readable on the dark pill).
 $mode-badge-width: 240px;
-$hyper-border: $glow-border;
-$hyper-shadow: $glow-shadow;
-$hyper-fg: $fg-primary;
+$hyper-accent-r: 199;
+$hyper-accent-g: 146;
+$hyper-accent-b: 234;
+$hyper-border: rgba($hyper-accent-r, $hyper-accent-g, $hyper-accent-b, 0.95);
+$hyper-shadow: 0 0 10px rgba($hyper-accent-r, $hyper-accent-g, $hyper-accent-b, 0.45),
+               0 0 22px rgba($hyper-accent-r, $hyper-accent-g, $hyper-accent-b, 0.28);
+$hyper-shadow-peak: 0 0 14px rgba($hyper-accent-r, $hyper-accent-g, $hyper-accent-b, 0.65),
+                    0 0 32px rgba($hyper-accent-r, $hyper-accent-g, $hyper-accent-b, 0.4);
+$hyper-fg: #F5E8FF;
+$hyper-bar-glow: 0 6px 28px rgba($hyper-accent-r, $hyper-accent-g, $hyper-accent-b, 0.22);
+$hyper-bar-glow-peak: 0 8px 40px rgba($hyper-accent-r, $hyper-accent-g, $hyper-accent-b, 0.36);
 $normal-border: $widget-border;
 $normal-fg: $fg-muted;
 $overlay-icon-opacity: 0.85;

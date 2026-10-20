@@ -133,7 +133,9 @@ dir), so stow maps `desktop-shell/topbar/` → `~/.config/eww/`.
 
 The bar itself is transparent so the wallpaper shows through. Capsules (workspaces,
 indicators, hyper mode) sit on top. Focus — hovered capsule, active workspace,
-hyper mode, and the Hyprland window border — is the same white edge plus glow.
+and the Hyprland window border — is a white edge plus glow. Hyper mode is the
+exception: it uses a themeable accent glow so "armed" cannot be mistaken for
+focus.
 
 ### Theming
 
@@ -152,6 +154,9 @@ directories, so a theme that only remapped directories would swap to a bar full
 of missing icons.
 
 To swap: add `theme/<name>/`, then `ln -sfn <name> theme/current && eww reload`.
+
+Retheme hyper-mode glow by editing `$hyper-accent-r/g/b` in the active
+`colors.scss` (borders, shadows, and the bar wash derive from those channels).
 
 ---
 

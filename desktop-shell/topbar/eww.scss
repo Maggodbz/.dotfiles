@@ -79,7 +79,21 @@ image {
 }
 
 
-/// Hyper mode badge
+/// Hyper mode badge. Normal is unchanged (muted outline). Hyper gets a soft
+/// accent breathe — colour comes from theme $hyper-accent-{r,g,b}.
+///
+/// eww's SCSS subset rejects `0%, 100%` keyframe selectors, so use from/to
+/// with alternate direction instead of a mid-point.
+
+@keyframes hyper-breathe {
+  from { box-shadow: #{$hyper-shadow}; }
+  to   { box-shadow: #{$hyper-shadow-peak}; }
+}
+
+@keyframes hyper-bar-breathe {
+  from { box-shadow: #{$hyper-bar-glow}; }
+  to   { box-shadow: #{$hyper-bar-glow-peak}; }
+}
 
 .hyper, .normal {
   // Wide enough to stay a landmark at the centre of the bar even when the mode
@@ -96,14 +110,40 @@ image {
 .hyper {
   border: 1px solid $hyper-border;
   box-shadow: $hyper-shadow;
+  animation: hyper-breathe 2.8s ease-in-out infinite alternate;
 
   label { color: $hyper-fg; }
+
+  &:hover {
+    border: 1px solid $hyper-border;
+    box-shadow: $hyper-shadow-peak;
+  }
 }
 
 .normal {
   border: 1px solid $normal-border;
 
   label { color: $normal-fg; }
+}
+
+// Soft accent wash under the whole HUD while armed — same cadence as the
+// badge so the bar feels like one signal, not two competing lights.
+.topbar-hyper {
+  box-shadow: $hyper-bar-glow;
+  animation: hyper-bar-breathe 2.8s ease-in-out infinite alternate;
+
+  // Corner clusters (workspaces + indicators) share the badge glow so armed
+  // mode reads across the whole bar, not just the centre pill.
+  .cluster {
+    border: 1px solid $hyper-border;
+    box-shadow: $hyper-shadow;
+    animation: hyper-breathe 2.8s ease-in-out infinite alternate;
+  }
+
+  .workspace-active {
+    border: 1px solid $hyper-border;
+    box-shadow: $hyper-shadow;
+  }
 }
 
 .overlay-icon {

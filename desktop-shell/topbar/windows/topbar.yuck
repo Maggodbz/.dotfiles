@@ -3,7 +3,7 @@
 (defwidget topbar [monitor]
   (box
     :orientation "h"
-    :class       "topbar"
+    :class       "topbar${HYPER.class == 'hyper' ? ' topbar-hyper' : ''}"
     :hexpand     true
     :spacing    1
     :space-evenly true
