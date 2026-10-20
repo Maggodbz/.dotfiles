@@ -30,7 +30,7 @@ COPR_REPOS=(
     varlad/eww           # eww - the top bar
     lihaohong/yazi       # yazi
 )
-COPR_PACKAGES=(hyprland hyprpaper hyprshot hyprlock hypridle eww yazi)
+COPR_PACKAGES=(hyprland hyprpaper hyprshot hyprlock hypridle hyprpolkitagent eww yazi)
 
 # The compositor itself has no single COPR that spans releases: solopasha
 # dropped every non-rawhide chroot, so it works on 42 but 404s on 44. Pick by
